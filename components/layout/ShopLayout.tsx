@@ -43,7 +43,7 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const firstSegment = pathname.split("/")[1];
-    if (firstSegment !== "sign-in" && firstSegment !== "register") {
+    if (firstSegment !== "sign-in" && firstSegment !== "signup") {
       if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
         router.push("/sign-in");
       }
