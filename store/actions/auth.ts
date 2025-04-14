@@ -34,6 +34,17 @@ export interface SignUpData {
   password: string;
   confirmPassword: string;
 }
+export interface WholesaleSignUpData {
+  firstName: string;
+  lastName: string;
+  country: {
+    id: string;
+    name: string;
+  };
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
 // Ensure Cookies token is correctly set
 const authToken = Cookies.get("loggedIn") || "";
@@ -268,3 +279,40 @@ export const vverifyOtp = createAsyncThunk<AuthResponse, any>(
   }
 );
 
+export const wholeSalesignUpAction = createAsyncThunk<AuthResponse, any>(
+  "signUp",
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
+
+      const res = await axios.post<AuthResponse>(
+        `${process.env.NEXT_PUBLIC_ADDRESS}v1/wholesale_request/send`,
+        data,
+        config
+      );
+
+      if (res.data.success) {
+        console.log(res.data);
+        
+        Cookies.set("loggedIn", (res.data as any).data.token!);
+        // console.log("res.data.result",res.data.data.user);
+        
+        dispatch(loadUser(res.data.data?.user!));
+        dispatch(registerSuccess(res.data));
+      } else {
+        dispatch(registerError(res.data));
+      }
+
+      return res.data;
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+      console.log(error);
+      dispatch(registerError(error.response?.data ));
+      return rejectWithValue(
+        error.response?.data || { success: false, message: "An error occurred" }
+      );
+    }
+  }
+);
