@@ -3,18 +3,56 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { signIn, SignInData } from "@/store/actions/auth";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { USER_ROLE } from "@/app/constants";
+import { useRouter } from "next/navigation";
+import { mapServerErrors } from "@/helpers/commonFunction";
 
 export default function Register() {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Login Data:", formData);
+  // };
+
+  const handleSubmit = async (
+    e: React.FormEvent,
+    values: SignInData
+  ) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+
+    try {
+      const res = await dispatch(signIn(values)).unwrap();
+      console.log("Submitted values:", res);
+
+      //  const apiResponse = res.payload
+      if (res.success) {
+        if (res.data?.user.role == USER_ROLE.wholesale) {
+          router.push(`/`);
+        }
+        if (res.data?.user.role == USER_ROLE.frontend_user) {
+          router.push(`/user/orders`);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+
+      const formErrors = mapServerErrors((error as any).errors, setErrors);
+      console.error("Login failed:", formErrors);
+    }
   };
 
   return (
@@ -31,7 +69,7 @@ export default function Register() {
 
       <div className="w-full md:w-1/2 p-3">
         <h2 className="text-2xl text-black font-bold mb-4">Login</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={ (e)=> handleSubmit(e,formData)}>
           <div className="grid grid-cols-1 gap-4">
             <div className="p-1">
               <label className="block text-black mb-1">Email</label>
@@ -41,7 +79,7 @@ export default function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full mt-1 border rounded p-2 border-black"
-                required
+              
               />
             </div>
 
@@ -53,7 +91,7 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full mt-1 border rounded p-2 border-black"
-                required
+          
               />
             </div>
           </div>

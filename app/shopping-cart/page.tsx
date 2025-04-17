@@ -31,6 +31,7 @@ interface CartItem {
   quantity: number;
   cartID: string;
   variations: any;
+  wholesale_price : number ;
 }
 
 const Page: React.FC = () => {
@@ -105,7 +106,7 @@ const Page: React.FC = () => {
       title: "Product Price",
       key: "price",
       transform: (_: any, row: CartItem) => (
-        <p>{row.discount_price > 0 ? row.discount_price : row.regular_price}</p>
+        <p>{row.wholesale_price > 0 ? row.wholesale_price : '-'}</p>
       ),
     },
     {
@@ -178,8 +179,6 @@ const Page: React.FC = () => {
 
   const deleteCartF = async (item) => {
     try {
-console.log(item);
-
 
       await dispatch(deleteCart({ ...item, id: item.id, cartCount }));
       setApihit(true);

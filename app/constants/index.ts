@@ -31,6 +31,12 @@ export const IS_MULTY_PRICE = 1;
 
 export const PAYMENT_METHODS = {
   square_card: 1,
+  afterpay :2,
+  square_gpay:3,
+  paypal :4,
+  apple_pay :5,
+  stripe :6,
+  zip_pay : 7
 };
 
 export const ORDER_STATUS = {

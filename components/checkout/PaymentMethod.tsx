@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SquarePayment from "./SquarePayment";
 import PayPalComponent from "./PayPalComponent";
 import { FaCcVisa, FaCcPaypal } from "react-icons/fa";
@@ -7,10 +7,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { LOCAL_PICKUP, STANDARD_DELIVERY } from "@/app/constants";
 import toast from "react-hot-toast";
+import AfterPay from "./Afterpay";
 
 const paymentMethods = [
-  { id: "credit_card", name: "Credit Card", icon: <FaCcVisa /> },
+  // { id: "credit_card", name: "Credit Card", icon: <FaCcVisa /> },
   // { id: "paypal", name: "PayPal", icon: <FaCcPaypal /> },
+  { id: "afterpay", name: "After Pay", icon: <FaCcVisa /> },
 ];
 
 const PaymentSelector = ({
@@ -50,6 +52,41 @@ const PaymentSelector = ({
 
     setSelectedMethod(method.id);
   };
+  const [deviceDetails, setDeviceDetails] = useState({ ip: "", type: "" });
+  useEffect(() => {
+    const fetchDeviceDetails = async () => {
+      try {
+        // Fetch IP address
+        const res = await fetch("https://api64.ipify.org?format=json");
+        const data = await res.json();
+        const ip = data.ip;
+
+        // Detect device type
+        const userAgent = navigator.userAgent;
+        const platform = navigator.platform;
+        let deviceType = "Unknown";
+
+        if (/Android/i.test(userAgent)) {
+          deviceType = "Android";
+        } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+          deviceType = "iOS";
+        } else if (/Win/i.test(platform)) {
+          deviceType = "Windows";
+        } else if (/Mac/i.test(platform)) {
+          deviceType = "MacOS";
+        } else if (/Linux/i.test(platform)) {
+          deviceType = "Linux";
+        }
+
+        // Set state
+        setDeviceDetails({ ip, type: deviceType });
+      } catch (error) {
+        console.error("Error fetching IP:", error);
+      }
+    };
+
+    fetchDeviceDetails();
+  }, []);
 
   return (
     <div className="flex flex-col gap-6 mt-6 p-2 bg-white shadow-lg rounded-xl max-w-lg mx-auto border border-gray-300">
@@ -104,7 +141,19 @@ const PaymentSelector = ({
               shippingAddress={sameAsBilling ? billingAddress : shippingAddress}
             />
           )}
-          {selectedMethod === "paypal" && <PayPalComponent />}
+                 {selectedMethod === "afterpay" && (
+          
+            <AfterPay
+              deviceDetails={deviceDetails}
+              selectedShipping={selectedShipping}
+              discount={discount}
+              spiner={spiner}
+              setSpiner={setSpiner}
+              productData={productData.result}
+              billingAddress={billingAddress}
+              shippingAddress={sameAsBilling ? billingAddress : shippingAddress}
+            />
+          )}
         </div>
       )}
     </div>

@@ -199,10 +199,10 @@ listProducts(search)
           <div className="flex justify-between w-full items-center gap-6">
             <p className="font-semibold max-w-[350px]">{product.name}</p>
             <h1 className="font-bold">
-              $
-              {product.discount_price > 0
-                ? product.discount_price
-                : product.regular_price}
+           
+              {product.wholesale_price > 0
+                ? "$"+ product.wholesale_price
+                : "-"}
             </h1>
           </div>
         </Link>

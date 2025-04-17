@@ -35,7 +35,7 @@ export const addToCart = createAsyncThunk<any, FormData>(
         }
       }
 
-      const res = await api.post<listResponse>("/v1/cart/add", {
+      const res = await api.post<listResponse>("/v1/wholesale_cart/add", {
         ...data,
         product_id: data.id,
       });
@@ -150,7 +150,7 @@ export const cartCountAction = createAsyncThunk(
         return;
       }
 
-      const res = await api.get<listResponse>("/v1/cart/cart_count");
+      const res = await api.get<listResponse>("/v1/wholesale_cart/cart_count");
 
     
       dispatch(loadCart(res.data.data.count));
@@ -211,7 +211,7 @@ export const deleteCart = createAsyncThunk<any, any>(
         return res;
       }
 
-      const res = await api.delete<listResponse>(`/v1/cart/delete/${data.id}`, data);
+      const res = await api.delete<listResponse>(`/v1/wholesale_cart/delete/${data.id}`, data);
       if (res.data.success) {
         dispatch(registerSuccess(res.data));
       }
@@ -241,7 +241,7 @@ const logOutDelete = (data) => {
 };
 
 export const calculatePrice = (row) => {
-  let price = row.discount_price ? row.discount_price : row.regular_price;
+  let price = row.wholesale_price ? row.wholesale_price : row.wholesale_price;
   if(row.is_free == 1){
     price = 0
   }
@@ -250,9 +250,10 @@ export const calculatePrice = (row) => {
     return (
       sum +
       (variation.is_quantity_based == IS_MULTY_PRICE ? row.quantity : 1) *
-        variation.options.reduce((optSum, option) => optSum + option.price, 0)
+        variation.options.reduce((optSum, option) => optSum + option.wholesale_price, 0)
     );
   }, 0);
+console.log("variationPrice",variationPrice);
 
   return variationPrice + price * row.quantity;
 };
@@ -280,7 +281,7 @@ export const myCart = createAsyncThunk<any, FormData>(
   "myCart",
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const res = await api.get<listResponse>(`/v1/cart/list`);
+      const res = await api.get<listResponse>(`/v1/wholesale_cart/list`);
       console.log(res.data.data);
       const result = (res.data.data as any).result.map((item) => ({
         ...item,

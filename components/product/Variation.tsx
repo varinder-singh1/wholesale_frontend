@@ -94,10 +94,7 @@ const Variations = ({ variationData, setVariation, variation, errors }) => {
     });
 
   }
-  useEffect(()=>{
-console.log(variation,"variation");
-
-  },[variation])
+ 
   return (
     <div>
       <p className="text-lg text-black font-bold">Select your Options</p>
@@ -109,19 +106,19 @@ console.log(variation,"variation");
                 <p className="px-3 text-red-400">{errors[row.id]}</p>
               )}
               <button
-                onClick={() => toggleCategoryVisibility(row.name)}
+                onClick={() => toggleCategoryVisibility(row.id)}
                 className="flex items-center justify-between w-full px-4 py-2 text-lg font-medium text-black bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
               >
                 <span>
                   {row.name.charAt(0).toUpperCase() + row.name.slice(1)}
                 </span>
-                {showCategory[row.name] ? (
+                {showCategory[row.id] ? (
                   <ChevronUpIcon className="h-5 w-5 text-black transition-transform duration-300" />
                 ) : (
                   <ChevronDownIcon className="h-5 w-5 text-black transition-transform duration-300" />
                 )}
               </button>
-              {showCategory[row.name] && (
+              {showCategory[row.id] && (
                 <div className="mt-2 space-y-2">
                   {row.options.map((option) => (
                     <div key={option.id} className="flex items-center gap-2">
@@ -146,7 +143,7 @@ console.log(variation,"variation");
                         className="text-sm text-gray-600"
                       >
                         {option.name}{" "}
-                        {option.price > 0 && `(+$${option.price})`}{" "}
+                        {option.wholesale_price > 0 && `(+$${option.wholesale_price})`}{" "}
                         {option.in_stock != IN_STOCK && "Out of stock"}
                       </label>
                     </div>
@@ -161,19 +158,19 @@ console.log(variation,"variation");
                   <p className="px-3 text-red-400">{errors[row.id]}</p>
                 )}
                 <button
-                  onClick={() => toggleCategoryVisibility(row.name)}
+                  onClick={() => toggleCategoryVisibility(row.id)}
                   className="flex items-center justify-between w-full px-4 py-2 text-lg font-medium text-black bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-300"
                 >
                   <span>
                     {row.name.charAt(0).toUpperCase() + row.name.slice(1)}
                   </span>
-                  {showCategory[row.name] ? (
+                  {showCategory[row.id] ? (
                     <ChevronUpIcon className="h-5 w-5 text-black transition-transform duration-300" />
                   ) : (
                     <ChevronDownIcon className="h-5 w-5 text-black transition-transform duration-300" />
                   )}
                 </button>
-                {showCategory[row.name] && (
+                {showCategory[row.id] && (
                   <div className="mt-2 space-y-2">
                     {row.options.map((option) => (
                       <div key={option.id} className="flex items-center gap-2">
@@ -198,7 +195,7 @@ console.log(variation,"variation");
                           htmlFor={`option-${option.id}`}
                           className="text-sm text-gray-600"
                         >
-                          {option.price > 0 ? `(+$${option.price})` : "add"}{" "}
+                          {option.wholesale_price > 0 ? `(+$${option.wholesale_price})` : "add"}{" "}
                         </label>
                       </div>
                     ))}

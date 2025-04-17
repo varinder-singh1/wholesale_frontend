@@ -63,7 +63,7 @@ export const signIn = createAsyncThunk<AuthResponse, SignInData>(
       };
 
       const res = await axios.post<AuthResponse>(
-        `${process.env.NEXT_PUBLIC_ADDRESS}/v1/auth/sign_in`,
+        `${process.env.NEXT_PUBLIC_ADDRESS}/v1/auth/wholesale_sign_in`,
         data,
         config
       );

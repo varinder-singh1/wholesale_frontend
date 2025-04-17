@@ -117,7 +117,6 @@ const CheckOut: React.FC = () => {
       setShippingPrice(0);
     }
 
-    // return 99;
   };
 
   const applyCouponF = async () => {
@@ -133,27 +132,8 @@ const CheckOut: React.FC = () => {
       const apiRes = res.payload;
 
       if ((apiRes as any).success) {
-        // if ((apiRes as any).data.result.coupon_type == COUPEN_TYPE.discount) {
-        //   setCouponApplied(true);
-        //   setdiscount({
-        //     ...discount,
-        //     coupon_code: (apiRes as any).data.result.discount,
-        //     applied: 1,
-        //   });
-        //   getMyCarts();
-        // }
-
-        // if (
-        //   (apiRes as any).data.result.coupon_type == COUPEN_TYPE.free_shiipping
-        // ) {
-        //   setCouponApplied(true);
-        //   setdiscount({
-        //     ...discount,
-        //     is_shipping_free: 1,
-        //     applied: 1,
-        //   });
-        //   getMyCarts();
-        // }
+        
+ 
         if ((apiRes as any).data.result.coupon_type == COUPEN_TYPE.product) {
           setdiscount((apiRes as any).data.result);
           setCouponApplied(true);
@@ -200,10 +180,7 @@ const CheckOut: React.FC = () => {
     setSelectedMethod("");
     setCouponCode("");
     setdiscount({
-      // applied: 0,
-      // coupon_code: 0,
-      // gift_card: 0,
-      // is_shipping_free: 0,
+      
     });
     getMyCarts();
   }, [sameAsBilling, billingAddress, shippingAddress, selectedAddress]);
@@ -218,38 +195,13 @@ const CheckOut: React.FC = () => {
         setIsOpen={setCouponOpen}
       />
 
-      <div className="w-[90%]  mx-auto">
+      <div className="w-[90%]  mx-auto border-b mb-5">
         <h1 className="text-3xl p-6 font-extrabold text-black">CheckOut</h1>
-        <button
-          onClick={() => {
-            if (
-              selectedShipping == STANDARD_DELIVERY ||
-              selectedShipping == LOCAL_PICKUP
-            ) {
-              setCouponOpen(!couponOpen);
-            } else {
-              toast.error("Please select your shipping way first");
-              return;
-            }
-          }}
-          className="bg-amazon_blue relative p-5 w-full text-white rounded-md my-2 flex"
-        >
-          {" "}
-          <CiDiscount1 className="text-lg mx-2" />
-          Have a Coupan ? click here to enter your code
-          {(discount as any)?.coupon_applied == 1 && (
-            <div className="absolute bg-red-500 text-white text-xs px-2 py-1 rounded-md right-3 top-2">
-              Applied
-            </div>
-          )}
-        </button>
-        {/* <button className="bg-amazon_blue p-5 w-full text-white rounded-md my-2 flex">
-          <FaGift className="text-lg mx-2" /> Have a gift Card? click here to
-          enter your code
-        </button> */}
+       
+       
       </div>
       <section className="  gap-10 w-full md:w-[90%]  grid grid-cols-3 justify-around mx-auto mt-3  text-black">
-        {/* Shipping Address Section */}
+       
         <div className=" py-4 md:col-span-2 col-span-3 pb-4 rou border-none">
           {user ? (
             <>

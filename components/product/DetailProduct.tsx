@@ -57,30 +57,14 @@ const Detail = () => {
   const { slug } = useParams();
   const { cartCount } = useSelector((state: any) => state.cart);
 
-
-  const router = useRouter()
+  const router = useRouter();
   const { loading, user } = useSelector((state: RootState) => state.auth);
 
   const [extras, setExtras] = useState([]);
   const [errors, setErrors] = useState({});
   const [variationData, setVariationData] = useState([]);
-  const [relatedProduct , setRelatedProduct] = useState([])
+  const [relatedProduct, setRelatedProduct] = useState([]);
   const [product, setProduct] = useState({
-    // id: 1,
-    // name: "Headunit with CarPlay for Universal 2DIN | 7″ inch pro",
-    // price: 49.99,
-    // discount_price: 45,
-    // description: "This is a sample product description.",
-    // specification :"",
-    // images: [],
-    // imagesb: [
-    //   "/images/MK-2.jpg",
-    //   "/images/Ba-BF.jpg",
-    //   "/images/Ford-edge.jpg",
-    //   "/images/MK-2.jpg",
-    //   "/images/Ba-BF.jpg",
-    //   "/images/Ford-edge.jpg",
-    // ],
     addOns: {
       battery: [
         { id: 1, name: "Extra Battery", price: 10 },
@@ -113,7 +97,7 @@ const Detail = () => {
   };
 
   const [isSharePopupOpen, setIsSharePopupOpen] = useState(false);
-  console.log(product)
+  console.log(product);
   const list = useDebouncedCallback(async () => {
     try {
       const res = await dispatch(ProductForShop({ slug })).unwrap();
@@ -122,7 +106,7 @@ const Detail = () => {
         setApiHit(true);
         setExtras((res.data as any).extras);
         setVariationData((res.data as any).variation);
-        setRelatedProduct((res.data as any).relatedProduct)
+        setRelatedProduct((res.data as any).relatedProduct);
       }
     } catch (error) {
       console.error(error);
@@ -162,8 +146,11 @@ const Detail = () => {
       }, {} as Record<string, string>);
   }
 
-  const handleCart = async (buyNow:boolean) => {
-    
+  const handleCart = async (buyNow: boolean) => {
+    if (!(product as any).wholesale_price) {
+      toast.error("Please contact to support for this product");
+      return ;
+    }
 
     if (variationData.length > 0) {
       console.log("variationData", variationData);
@@ -187,25 +174,26 @@ const Detail = () => {
         variations: variation,
       })
     );
- 
 
-if(buyNow && apiResponse.payload.success){
-  router.push(`/checkout`)
-}
-
+    if (buyNow && apiResponse.payload.success) {
+      router.push(`/checkout`);
+    }
   };
   const tabDataa = tableData(product);
   // console.log(product.name)
   useEffect(() => {
     if (slug) list();
   }, [slug, dispatch]);
- 
-  
+
   return apiHit ? (
     <div>
       <div className="grid container mx-auto md:grid-cols-7 grid-cols-1 lg:gap-3  ">
         <div className="md:col-span-3">
-          <ImageGallery product={product}  handleCart={handleCart}     images={(product as any).images} />
+          <ImageGallery
+            product={product}
+            handleCart={handleCart}
+            images={(product as any).images}
+          />
         </div>
 
         {(product as any).images.length > 0 && (
@@ -216,7 +204,12 @@ if(buyNow && apiResponse.payload.success){
           <h1 className="text-xl sm:text-3xl lg:w-10/1 font-bold font-serif text-gray-800">
             {(product as any).name}
           </h1>
-        <p className="text-2xl text-black"> {(product as any).wholesale_price !==0 ? (product as any).wholesale_price : "--"}</p>
+          <p className="text-2xl text-black">
+            {" "}
+            {(product as any).wholesale_price !== 0
+              ? (product as any).wholesale_price
+              : "--"}
+          </p>
           <div className="flex flex-row gap-2 dark:text-black">
             <p className="flex items-center gap-2 cursor-pointer  ">
               <HeartIcon className="h-5" /> Add to wishlist
@@ -269,18 +262,18 @@ if(buyNow && apiResponse.payload.success){
                   </button>
                 </div>
                 <button
-                  onClick={()=>handleCart(false)}
+                  onClick={() => handleCart(false)}
                   className="items-center flex gap-2 px-5 md:mt-o md:h-12 h-9  md:text-md text-sm  bg-amazon_blue text-white  rounded-md shadow-lg hover:bg-gradient-to-l transition-all duration-300 transform hover:scale-105 focus:outline-none"
                 >
                   <GiShoppingCart className="text-lg" />
                   Add to Cart
                 </button>
                 <button
-                  onClick={()=>handleCart(true)}
+                  onClick={() => handleCart(true)}
                   className="items-center flex gap-2 px-5 md:mt-o md:h-12 h-9  md:text-md text-sm md:hidden   bg-amazon_light text-white  rounded-md shadow-lg hover:bg-gradient-to-l transition-all duration-300 transform hover:scale-105 focus:outline-none"
                 >
                   <GiShoppingCart className="text-lg" />
-               Buy  Now
+                  Buy Now
                 </button>
               </>
             ) : (
@@ -331,7 +324,9 @@ if(buyNow && apiResponse.payload.success){
           <TabComponent no_title={true} tabs={tabDataa} />
         </div>
         <div>
-          <p className="text-black my-3"><span className="font-bold">SKU:</span> {(product as any)?.sku} </p>
+          <p className="text-black my-3">
+            <span className="font-bold">SKU:</span> {(product as any)?.sku}{" "}
+          </p>
         </div>
         <RelatedProduct title="Related Products" data={relatedProduct} />
       </Suspense>
@@ -361,7 +356,12 @@ const tableData = (product) => {
     {
       id: 3,
       label: "Demo video",
-      content: <Demmovideo demovideo={product?.demo_video} installationVideo={product?.installation_video} />,
+      content: (
+        <Demmovideo
+          demovideo={product?.demo_video}
+          installationVideo={product?.installation_video}
+        />
+      ),
     },
     {
       id: 2,
