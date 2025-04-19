@@ -21,16 +21,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 console.log(product)
   return (
     <div className="w-full rounded-none relative max-w-[450px] mx-auto border bg-white shado-lg min-h-[350px] flex flex-col rounded-l">
-      {/* Discount Tag */}
-      {/* {product.discount_price > 0 && (
-        <div className="absolute top-0 right-0 z-20 bg-red-500 text-white text-xs font-semibold py-1 px-4 rounded-bl-lg">
-          {discountPercentage}% OFF
-        </div>
-      )} */}
-
-      {/* Image Container */}
+    
+ 
       <Link href={`/product/${product.slug}`} passHref>
-        <div className="relative w-full h-[260px] bg-gray-100 rounded-t-lg cursor-pointer">
+        <div className="relative w-full h-[200px] bg-gray-100 rounded-t-lg cursor-pointer">
           <Image
             src={
               product.images[0].image.includes("http")
@@ -40,18 +34,12 @@ console.log(product)
             alt={product.name || "Product Image"}
             width={300}
             height={300}
-            className="rounded-t-lg"
+            className=" "
             loading="lazy"
             style={{ mixBlendMode: "darken", backgroundColor: "#f3f4f6" }}
           />
 
-          {/* Fire Icon (Left Side) */}
-
-
-          {/* Wishlist Icon (Right Side) */}
-          {/* <button className="absolute top-3 right-3 text-white hover:text-red-500 text-2xl transition-transform transform hover:scale-110">
-            <FaHeart />
-          </button> */}
+         
         </div>
       </Link>
 

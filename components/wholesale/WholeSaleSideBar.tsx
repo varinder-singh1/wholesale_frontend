@@ -27,11 +27,7 @@ const WholeSaleSidebar = () => {
     <aside className="w-64 bg-white shadow-lg border-r min-h-screen overflow-hidden">
       {/* Profile Section */}
       <div className="p-6 border-b flex flex-col items-center text-center">
-        {/* <img
-          src="https://via.placeholder.com/80"
-          alt="User Avatar"
-          className="w-20 h-20 rounded-full border-2 border-gray-300 shadow-sm"
-        /> */}
+     
         <h2 className="mt-3 text-lg font-semibold text-gray-800">Karan Dhiman</h2>
         <button className="text-sm text-gray-500 hover:text-gray-700">Logout</button>
       </div>

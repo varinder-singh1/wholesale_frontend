@@ -288,7 +288,7 @@ export const wholeSalesignUpAction = createAsyncThunk<AuthResponse, any>(
       };
 
       const res = await axios.post<AuthResponse>(
-        `${process.env.NEXT_PUBLIC_ADDRESS}v1/wholesale_request/send`,
+        `${process.env.NEXT_PUBLIC_ADDRESS}/v1/wholesale_request/send`,
         data,
         config
       );
@@ -296,10 +296,8 @@ export const wholeSalesignUpAction = createAsyncThunk<AuthResponse, any>(
       if (res.data.success) {
         console.log(res.data);
         
-        Cookies.set("loggedIn", (res.data as any).data.token!);
-        // console.log("res.data.result",res.data.data.user);
+       
         
-        dispatch(loadUser(res.data.data?.user!));
         dispatch(registerSuccess(res.data));
       } else {
         dispatch(registerError(res.data));

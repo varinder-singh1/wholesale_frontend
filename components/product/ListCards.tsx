@@ -5,15 +5,13 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getProductForShop } from "@/store/actions/admin/product";
-
 import ProductCard from "@/components/product/Card";
 import CardSkeleton from "@/components/product/CardSkelton";
 import Pagination from "@/components/globals/Pagination";
 import SideBar from "@/components/product/SideBar";
 import ContactSupport from "@/components/home/ContactSupport";
 import { FcClearFilters } from "react-icons/fc";
-import { FaTimes } from "react-icons/fa";
-
+ 
 interface Product {
   id: string;
   [key: string]: any;

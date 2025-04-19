@@ -7,8 +7,13 @@ import { mapServerErrors } from "@/helpers/commonFunction";
 import { USER_ROLE } from "@/app/constants";
 import { useRouter } from "next/navigation";
 import DynamicForm, { FormField } from "../globals/DynamicForm";
-import { CountrySelect, StateSelect, CitySelect } from "react-country-state-city";
+import {
+  CountrySelect,
+  StateSelect,
+  CitySelect,
+} from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import UploadSingleFile from "../globals/Fields/UploadSingleFile";
 
 const WholeSaleSignUp: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,11 +21,17 @@ const WholeSaleSignUp: React.FC = () => {
 
   const [values, setValues] = useState<any>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [selectedCountryId, setSelectedCountryId] = useState<number | null>(null);
+  const [selectedCountryId, setSelectedCountryId] = useState<number | null>(
+    null
+  );
 
   const formFields: FormField[] = [
     { name: "company_name", label: "Company Name", type: "text" },
-    { name: "buisness_trading_name", label: "Business Trading Name", type: "text" },
+    {
+      name: "buisness_trading_name",
+      label: "Business Trading Name",
+      type: "text",
+    },
     { name: "abn_acn", label: "ABN/ACN", type: "text" },
     { name: "contact_name", label: "Contact Name", type: "text" },
     {
@@ -37,16 +48,19 @@ const WholeSaleSignUp: React.FC = () => {
               setSelectedCountryId(e.id);
               setValues((prev) => ({
                 ...prev,
-                country: e.name,
-                country_iso2: e.iso2,
-                country_iso3: e.iso3,
+                // country: e.name,
+                // country_iso2: e.iso2,
+                // country_iso3: e.iso3,
+                country: { id: e.id, name: e.name, iso3: e.iso3, iso2: e.iso2 },
               }));
             }}
             placeHolder="Select Country"
           />
+          {errors.country && <p className="text-red-400" >{errors.country}</p>}
         </div>
       ),
     },
+
     {
       name: "state",
       label: "State",
@@ -57,34 +71,78 @@ const WholeSaleSignUp: React.FC = () => {
           <div>
             <label className="block text-lg font-medium mb-1">State</label>
             <StateSelect
-              countryid={selectedCountryId}
+              countryid={values?.country?.id}
               inputClassName="w-full h-10 px-3 border rounded"
               onChange={(e) => {
                 setValues((prev) => ({
                   ...prev,
-                  state: e.name,
+                  // state: e.name,
+                  state: { id: e.id, name: e.name, state_code: e.state_code },
                 }));
               }}
               placeHolder="Select State"
             />
+                      {errors.state && <p className="text-red-400" >{errors.state}</p>}
           </div>
         ) : null,
     },
     { name: "city", label: "City", type: "text" },
     { name: "postcode", label: "Postcode", type: "number" },
     { name: "phone", label: "Phone", type: "number" },
-    { name: "account_payable_email", label: "Account Payable Email", type: "email" },
-    { name: "name_of_social_media_channel", label: "Name of Social Media Channel", type: "text" },
+    {
+      name: "account_payable_email",
+      label: "Account Payable Email",
+      type: "email",
+    },
+    {
+      name: "name_of_social_media_channel",
+      label: "Name of Social Media Channel",
+      type: "text",
+    },
     { name: "facebook", label: "Facebook", type: "text" },
     { name: "youtube", label: "YouTube", type: "text" },
     { name: "tiktok", label: "TikTok", type: "text" },
     { name: "x", label: "X", type: "text" },
-    { name: "last_year_turn_over", label: "Last Year Turn Over", type: "number" },
+    {
+      name: "last_year_turn_over",
+      label: "Last Year Turn Over",
+      type: "number",
+    },
     { name: "no_of_employee", label: "Number Of Employees", type: "number" },
-    { name: "current_methods_of_sales", label: "Current Methods Of Sales", type: "text" },
-    { name: "ebay_and_other_ecommerce_platform", label: "eBay And Other Platforms", type: "text" },
+    {
+      name: "current_method_of_sales",
+      label: "Current Methods Of Sales",
+      type: "text",
+    },
+    {
+      name: "ebay_and_other_ecommerce_platform",
+      label: "eBay And Other Platforms",
+      type: "text",
+    },
     { name: "website", label: "Website", type: "text" },
-    { name: "shop_photo", label: "Shop Photo URL", type: "text" }
+    {
+      name: "images",
+      label: "Upload Images",
+      type: "custom",
+      customClass: "col-span-2",
+      customRender: () => {
+        return (
+          <div className="col-span-2">
+            {
+              <UploadSingleFile
+                name={"shop_photo"}
+                customClass="col-span-2"
+                values={values}
+                setValues={setValues}
+                errors={errors}
+                folder={"wholesalerequest"}
+              />
+            }
+          </div>
+        );
+      },
+    },
+    // { name: "shop_photo", label: "Shop Photo URL", type: "text" }
   ];
 
   const handleSubmit = async (
@@ -96,11 +154,7 @@ const WholeSaleSignUp: React.FC = () => {
     try {
       const res = await dispatch(wholeSalesignUpAction(values)).unwrap();
       if (res.success) {
-        if (res.data?.user.role === USER_ROLE.admin) {
-          router.push("/admin/departments");
-        } else {
-          router.push("/user/orders");
-        }
+        setValues({});
       }
     } catch (error) {
       const formErrors = mapServerErrors((error as any).errors, setErrors);
@@ -111,7 +165,9 @@ const WholeSaleSignUp: React.FC = () => {
   return (
     <div className="flex justify-center items-center p-8 min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-4xl">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Wholesale Sign-Up</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Wholesale Sign-Up
+        </h2>
         <DynamicForm
           formClassName="grid grid-cols-1 md:grid-cols-2 gap-6"
           submitTitle="Sign Up"
