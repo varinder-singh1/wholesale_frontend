@@ -126,3 +126,9 @@ export const   OPTION_TYPE = {
 custom :1,
 checkbox : 0
 }
+export const WHOLESALE_REQUEST_STATUS ={
+  pending : 0,
+  approved : 1,
+  rejected : 2,
+  in_progress : 3
+}

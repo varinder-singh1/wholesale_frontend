@@ -314,3 +314,26 @@ export const wholeSalesignUpAction = createAsyncThunk<AuthResponse, any>(
     }
   }
 );
+export const getuserList = createAsyncThunk<listResponse, string>(
+  "v1/wholesale_request/list",
+  async (uuid, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await api.get<listResponse>(
+        `/v1/wholesale_request/list/${uuid}`
+      );
+      console.log("rr", res);
+      return res.data;
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+      dispatch(registerError(error.response?.data));
+
+      return rejectWithValue(
+        error.response?.data ?? {
+          success: false,
+          message: "An error occurred",
+          errors: [],
+        }
+      );
+    }
+  }
+);

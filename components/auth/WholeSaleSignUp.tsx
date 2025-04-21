@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { SignInData, wholeSalesignUpAction } from "@/store/actions/auth";
@@ -20,11 +20,38 @@ const WholeSaleSignUp: React.FC = () => {
   const router = useRouter();
 
   const [values, setValues] = useState<any>({});
+    const [deviceDetails, setDeviceDetails] = useState<any>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedCountryId, setSelectedCountryId] = useState<number | null>(
     null
   );
+  useEffect(() => {
+    const fetchDeviceDetails = async () => {
+      try {
+        const res = await fetch('https://api64.ipify.org?format=json');
+        const data = await res.json();
+        const ip = data.ip;
 
+        const userAgent = navigator.userAgent;
+        const platform = navigator.platform;
+        let deviceType = 'Unknown';
+
+        if (/Android/i.test(userAgent)) deviceType = 'Android';
+        else if (/iPhone|iPad|iPod/i.test(userAgent)) deviceType = 'iOS';
+        else if (/Win/i.test(platform)) deviceType = 'Windows';
+        else if (/Mac/i.test(platform)) deviceType = 'MacOS';
+        else if (/Linux/i.test(platform)) deviceType = 'Linux';
+
+        setDeviceDetails({ ip, type: deviceType });
+        console.log('📱 Device Details:', { ip, deviceType });
+        setValues({...values ,device_detail :{ ip, deviceType } })
+      } catch (error) {
+        console.error('Error fetching IP:', error);
+      }
+    };
+
+    fetchDeviceDetails();
+  }, []);
   const formFields: FormField[] = [
     { name: "company_name", label: "Company Name", type: "text" },
     {
