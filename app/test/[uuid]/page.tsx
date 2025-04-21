@@ -2,16 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store/store';
 import { getuserList, updateUser } from '@/store/actions/admin/usereqest';
 import { useParams } from 'next/navigation';
 import UploadSingleFile from '@/components/globals/Fields/UploadSingleFile';
 import Image from 'next/image';
-export const WHOLESALE_REQUEST_STATUS = {
-  pending: 0,
-  approved: 1,
-  rejected: 2,
-  in_progress: 3,
-};
+import { WHOLESALE_REQUEST_STATUS } from '@/app/constants';
+
 
 const labelMap: Record<string, string> = {
   company_name: 'Company Name',
@@ -40,7 +37,7 @@ const labelMap: Record<string, string> = {
 };
 
 const AcceptedAndRejectedFieldsPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { uuid } = useParams() as { uuid: string };
   const [showModal, setShowModal] = useState(false);
   const [submittedData, setSubmittedData] = useState<Record<string, any>>({});
@@ -48,58 +45,55 @@ const AcceptedAndRejectedFieldsPage = () => {
   const [rejectedFields, setRejectedFields] = useState<{ name: string; reason: string }[]>([]);
   const [inProgressFields, setInProgressFields] = useState<string[]>([]);
   const [formValues, setFormValues] = useState<Record<string, string>>({});
+  const fetchData = async () => {
+    const res = await dispatch(getuserList({uuid}));
+    const result = (res?.payload as any)?.data?.result;
 
+    if (!result) return;
+
+    const accepted: string[] = [];
+    const rejected: { name: string; reason: string }[] = [];
+    const inProgress: string[] = [];
+    const formVals: Record<string, string> = {};
+    const displayVals: Record<string, any> = {};
+
+    Object.entries(result).forEach(([key, entry]: any) => {
+      if (
+        ['id', 'uuid', 'status', 'created_at', 'updated_at', 'deleted_at', 'createdAt', 'updatedAt', 'deletedAt'].includes(key)
+      )
+        return;
+
+      if (!entry || typeof entry !== 'object' || !('status' in entry)) return;
+
+      let value = entry.value;
+
+      if (typeof value === 'object' && value?.name) {
+        value = value.name;
+      }
+
+      if (entry.status === WHOLESALE_REQUEST_STATUS.approved) {
+        accepted.push(key);
+        displayVals[key] = value || '';
+      } else if (entry.status === WHOLESALE_REQUEST_STATUS.rejected) {
+        rejected.push({ name: key, reason: 'Field rejected by admin.' });
+        formVals[key] = value || '';
+        displayVals[key] = value || '';
+      } else if (entry.status === WHOLESALE_REQUEST_STATUS.pending) {
+        displayVals[key] = value || '';
+      } else if (entry.status === WHOLESALE_REQUEST_STATUS.in_progress) {
+        inProgress.push(key);
+        displayVals[key] = value || '';
+      }
+    });
+
+    setAcceptedFields(accepted);
+    setRejectedFields(rejected);
+    setInProgressFields(inProgress);
+    setFormValues(formVals);
+    setSubmittedData(displayVals);
+  };
   useEffect(() => {
     if (!uuid) return;
-
-    const fetchData = async () => {
-      const res: any = await dispatch(getuserList(uuid));
-      const result = res?.payload?.data?.result;
-
-      if (!result) return;
-
-      const accepted: string[] = [];
-      const rejected: { name: string; reason: string }[] = [];
-      const inProgress: string[] = [];
-      const formVals: Record<string, string> = {};
-      const displayVals: Record<string, any> = {};
-
-      Object.entries(result).forEach(([key, entry]: any) => {
-        if (
-          ['id', 'uuid', 'status', 'created_at', 'updated_at', 'deleted_at', 'createdAt', 'updatedAt', 'deletedAt'].includes(key)
-        )
-          return;
-
-        if (!entry || typeof entry !== 'object' || !('status' in entry)) return;
-
-        let value = entry.value;
-
-        if (typeof value === 'object' && value?.name) {
-          value = value.name;
-        }
-
-        if (entry.status === WHOLESALE_REQUEST_STATUS.approved) {
-          accepted.push(key);
-          displayVals[key] = value || '';
-        } else if (entry.status === WHOLESALE_REQUEST_STATUS.rejected) {
-          rejected.push({ name: key, reason: 'Field rejected by admin.' });
-          formVals[key] = value || '';
-          displayVals[key] = value || '';
-        } else if (entry.status === WHOLESALE_REQUEST_STATUS.pending) {
-          displayVals[key] = value || '';
-        } else if (entry.status === WHOLESALE_REQUEST_STATUS.in_progress) {
-          inProgress.push(key);
-          displayVals[key] = value || '';
-        }
-      });
-
-      setAcceptedFields(accepted);
-      setRejectedFields(rejected);
-      setInProgressFields(inProgress);
-      setFormValues(formVals);
-      setSubmittedData(displayVals);
-    };
-
     fetchData();
   }, [uuid, dispatch]);
 

@@ -2,8 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/store/axiosInstance";  // Make sure your axios instance is properly set up
 import { registerError } from "@/store/slices/authSlice";  // Your error handling action
 import { listResponse } from "@/helpers/interfaces";  // Assuming the interface exists
+import { FormData } from "@/helpers/interfaces";
 
-export const getuserList = createAsyncThunk<listResponse, string, { rejectValue: any }>(
+export const getuserList = createAsyncThunk<listResponse,FormData>(
   "v1/wholesale_request/list",
   async (uuid:any, { dispatch, rejectWithValue }) => {
     try {
@@ -29,7 +30,7 @@ export const getuserList = createAsyncThunk<listResponse, string, { rejectValue:
 );
 export const updateUser = createAsyncThunk<
   any,
-  { uuid: string; data: any },
+  { uuid: any; data: any },
   { rejectValue: any }
 >("v1/wholesale_request/update", async ({ uuid, data }, { rejectWithValue }) => {
   try {

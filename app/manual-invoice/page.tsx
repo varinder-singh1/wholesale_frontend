@@ -5,9 +5,10 @@ import { useDispatch } from "react-redux";
 import { getProduct } from "@/store/actions/admin/product";
 import BillingForm from "@/components/checkout/BillingAddress";
 import ShippingAddress from "@/components/checkout/ShippingAddress";
+import { AppDispatch } from "@/store/store";
 
 const ManualInvoicePage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [items, setItems] = useState<any[]>([]);
   const [customer, setCustomer] = useState({ name: "", email: "", address: "" });
