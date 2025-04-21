@@ -60,7 +60,7 @@ const ShopFooter: React.FC = () => {
         <div className="text-center md:text-left">
          <Link className="w-[150px] block mx-auto sm:mx-0" href="/">
          <Image
-            src="https://kayhanaudio.com.au/wp-content/uploads/2023/02/logo.png"
+            src="/logo.jpg"
             height={80}
             width={120}
             alt="Company Logo"

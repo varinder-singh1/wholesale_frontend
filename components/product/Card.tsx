@@ -34,7 +34,7 @@ console.log(product)
             alt={product.name || "Product Image"}
             width={300}
             height={300}
-            className=" "
+            className="h-[200px] "
             loading="lazy"
             style={{ mixBlendMode: "darken", backgroundColor: "#f3f4f6" }}
           />
