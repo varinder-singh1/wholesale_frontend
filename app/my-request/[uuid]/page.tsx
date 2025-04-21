@@ -1,54 +1,58 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store/store';
-import { getuserList, updateUser } from '@/store/actions/admin/usereqest';
-import { useParams } from 'next/navigation';
-import UploadSingleFile from '@/components/globals/Fields/UploadSingleFile';
-import Image from 'next/image';
-import { WHOLESALE_REQUEST_STATUS } from '@/app/constants';
-
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { getuserList, updateUser } from "@/store/actions/admin/usereqest";
+import { useParams } from "next/navigation";
+import UploadSingleFile from "@/components/globals/Fields/UploadSingleFile";
+import Image from "next/image";
+import { WHOLESALE_REQUEST_STATUS } from "@/app/constants";
 
 const labelMap: Record<string, string> = {
-  company_name: 'Company Name',
-  buisness_trading_name: 'Business Trading Name',
-  abn_acn: 'ABN/ACN',
-  contact_name: 'Contact Name',
-  country: 'Country',
-  state: 'State',
-  city: 'City',
-  street_address: 'Street Address',
-  postcode: 'Postcode',
-  phone: 'Phone',
-  account_payable_email: 'Payable Email',
-  name_of_social_media_channel: 'Social Media Channel',
-  facebook: 'Facebook',
-  youtube: 'YouTube',
-  x: 'X (Twitter)',
-  tiktok: 'TikTok',
-  last_year_turn_over: 'Last Year Turnover',
-  no_of_employee: 'No of Employees',
-  current_method_of_sales: 'Current Method of Sales',
-  website: 'Website',
-  ebay_and_other_ecommerce_platform: 'eBay / Other Platforms',
-  website_url: 'Website URL',
-  shop_photo: 'Shop Photo',
+  company_name: "Company Name",
+  buisness_trading_name: "Business Trading Name",
+  abn_acn: "ABN/ACN",
+  contact_name: "Contact Name",
+  country: "Country",
+  state: "State",
+  city: "City",
+  street_address: "Street Address",
+  postcode: "Postcode",
+  phone: "Phone",
+  account_payable_email: "Payable Email",
+  name_of_social_media_channel: "Social Media Channel",
+  facebook: "Facebook",
+  youtube: "YouTube",
+  x: "X (Twitter)",
+  tiktok: "TikTok",
+  last_year_turn_over: "Last Year Turnover",
+  no_of_employee: "No of Employees",
+  current_method_of_sales: "Current Method of Sales",
+  website: "Website",
+  ebay_and_other_ecommerce_platform: "eBay / Other Platforms",
+  website_url: "Website URL",
+  shop_photo: "Shop Photo",
 };
 
 const AcceptedAndRejectedFieldsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+
   const { uuid } = useParams() as { uuid: string };
+
   const [showModal, setShowModal] = useState(false);
   const [submittedData, setSubmittedData] = useState<Record<string, any>>({});
   const [acceptedFields, setAcceptedFields] = useState<string[]>([]);
-  const [rejectedFields, setRejectedFields] = useState<{ name: string; reason: string }[]>([]);
+  const [rejectedFields, setRejectedFields] = useState<
+    { name: string; reason: string }[]
+  >([]);
   const [inProgressFields, setInProgressFields] = useState<string[]>([]);
   const [formValues, setFormValues] = useState<Record<string, string>>({});
+
   const fetchData = async () => {
-    const res = await dispatch(getuserList({uuid}));
+    const res = await dispatch(getuserList({ uuid }));
     const result = (res?.payload as any)?.data?.result;
-console.log("result===",result);
+    console.log("result===", result);
 
     if (!result) return;
 
@@ -60,32 +64,44 @@ console.log("result===",result);
 
     Object.entries(result).forEach(([key, entry]: any) => {
       if (
-        ['id', 'uuid', 'status', 'created_at', 'updated_at', 'deleted_at', 'createdAt', 'updatedAt', 'deletedAt'].includes(key)
+        [
+          "id",
+          "uuid",
+          "status",
+          "created_at",
+          "updated_at",
+          "deleted_at",
+          "createdAt",
+          "updatedAt",
+          "deletedAt",
+        ].includes(key)
       )
         return;
 
-      if (!entry || typeof entry !== 'object' || !('status' in entry)) return;
+      if (!entry || typeof entry !== "object" || !("status" in entry)) return;
 
       let value = entry.value;
 
-      if (typeof value === 'object' && value?.name) {
+      if (typeof value === "object" && value?.name) {
         value = value.name;
       }
 
       if (entry.status === WHOLESALE_REQUEST_STATUS.approved) {
         accepted.push(key);
-        displayVals[key] = value || '';
+        displayVals[key] = value || "";
       } else if (entry.status === WHOLESALE_REQUEST_STATUS.rejected) {
-        rejected.push({ name: key, reason: 'Field rejected by admin.' });
-        formVals[key] = value || '';
-        displayVals[key] = value || '';
+        rejected.push({ name: key, reason: "Field rejected by admin." });
+        formVals[key] = value || "";
+        displayVals[key] = value || "";
       } else if (entry.status === WHOLESALE_REQUEST_STATUS.pending) {
-        displayVals[key] = value || '';
+        displayVals[key] = value || "";
       } else if (entry.status === WHOLESALE_REQUEST_STATUS.in_progress) {
         inProgress.push(key);
-        displayVals[key] = value || '';
+        displayVals[key] = value || "";
       }
     });
+console.log("accepted========",accepted);
+
 
     setAcceptedFields(accepted);
     setRejectedFields(rejected);
@@ -99,8 +115,8 @@ console.log("result===",result);
   }, [uuid, dispatch]);
 
   const handleChange = (name: string, value: string) => {
-    console.log("value==",value);
-    
+    console.log("value==", value);
+
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -115,13 +131,15 @@ console.log("result===",result);
     });
 
     rejectedFields.forEach((field) => {
-      const currentValue = formValues[field.name] || '';
+      const currentValue = formValues[field.name] || "";
       const originalValue = submittedData[field.name];
       const hasChanged = currentValue !== originalValue;
 
       combinedData[field.name] = {
         value: currentValue,
-        status: hasChanged ? WHOLESALE_REQUEST_STATUS.in_progress : WHOLESALE_REQUEST_STATUS.rejected,
+        status: hasChanged
+          ? WHOLESALE_REQUEST_STATUS.in_progress
+          : WHOLESALE_REQUEST_STATUS.rejected,
       };
     });
 
@@ -134,59 +152,73 @@ console.log("result===",result);
         // alert('Something went wrong while updating.');
       }
     } catch (err) {
-      console.error('Error updating user:', err);
-      alert('An error occurred while submitting the form.');
+      console.error("Error updating user:", err);
+      alert("An error occurred while submitting the form.");
     }
   };
 
-  
-
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 text-black">
-      <h2 className="text-3xl font-bold mb-6">Wholesale Application Field Status</h2>
+      <h2 className="text-3xl font-bold mb-6">
+        Wholesale Application Field Status
+      </h2>
 
       {/* Accepted Fields */}
       {acceptedFields.length > 0 && (
-  <>
-    <h3 className="text-xl font-semibold mb-4 text-green-600">✅ Accepted Fields</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-    {acceptedFields.map((name) => (
-  <div key={name} className="border border-green-500 p-4 rounded shadow-sm">
-    <p className="text-sm text-gray-500">
-      {labelMap[name] || name} <span className="text-green-600">(Accepted)</span>
-    </p>
-    <div className="mt-1">
-      {name === 'shop_photo' ? (
         <>
-        {console.log(submittedData[name] ,"res")}
-         <img
-          src={`${process.env.NEXT_PUBLIC_S3_IMG_URL}${submittedData[name]}`}
-          alt="Shop Photo"
-          className="w-full h-full rounded-lg shadow-lg"
-        />
+          <h3 className="text-xl font-semibold mb-4 text-green-600">
+            ✅ Accepted Fields
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            {acceptedFields.map((name) => (
+              <div
+                key={name}
+                className="border border-green-500 p-4 rounded shadow-sm"
+              >
+                <p className="text-sm text-gray-500">
+                  {labelMap[name] || name}{" "}
+                  <span className="text-green-600">(Accepted)</span>
+                </p>
+                <div className="mt-1">
+                  {name === "shop_photo" ? (
+                    <>
+                      {console.log(submittedData[name], "res")}
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_S3_IMG_URL}${submittedData[name]}`}
+                        alt="Shop Photo"
+                        className="w-full h-full rounded-lg shadow-lg"
+                      />
+                    </>
+                  ) : (
+                    <p className="text-lg font-semibold">
+                      {submittedData[name]}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </>
-       
-      ) : (
-        <p className="text-lg font-semibold">{submittedData[name]}</p>
       )}
-    </div>
-  </div>
-))}
 
-    </div>
-  </>
-)}
-
-  {inProgressFields.length > 0 && (
+      {inProgressFields.length > 0 && (
         <>
-          <h3 className="text-xl font-semibold mb-4 text-yellow-600">🟡 In Progress Fields</h3>
+          <h3 className="text-xl font-semibold mb-4 text-yellow-600">
+            🟡 In Progress Fields
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {inProgressFields.map((name) => (
-              <div key={name} className="border border-yellow-500 p-4 rounded shadow-sm">
+              <div
+                key={name}
+                className="border border-yellow-500 p-4 rounded shadow-sm"
+              >
                 <p className="text-sm text-gray-500">
-                  {labelMap[name] || name} <span className="text-yellow-600">(In Progress)</span>
+                  {labelMap[name] || name}{" "}
+                  <span className="text-yellow-600">(In Progress)</span>
                 </p>
-                <p className="text-lg font-semibold mt-1">{submittedData[name] || '—'}</p>
+                <p className="text-lg font-semibold mt-1">
+                  {submittedData[name] || "—"}
+                </p>
               </div>
             ))}
           </div>
@@ -195,15 +227,25 @@ console.log("result===",result);
       {/* Rejected Fields */}
       {rejectedFields.length > 0 && (
         <>
-          <h3 className="text-xl font-semibold mb-4 text-red-600">❌ Rejected Fields</h3>
+          <h3 className="text-xl font-semibold mb-4 text-red-600">
+            ❌ Rejected Fields
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {rejectedFields.map((field) => (
-              <div key={field.name} className="border border-red-500 p-4 rounded shadow-sm">
+              <div
+                key={field.name}
+                className="border border-red-500 p-4 rounded shadow-sm"
+              >
                 <p className="text-sm text-gray-500">
-                  {labelMap[field.name] || field.name} <span className="text-red-600">(Rejected)</span>
+                  {labelMap[field.name] || field.name}{" "}
+                  <span className="text-red-600">(Rejected)</span>
                 </p>
-                <p className="text-lg font-semibold mt-1">{submittedData[field.name] || '—'}</p>
-                <p className="mt-2 text-sm text-red-500 italic">Reason: {field.reason}</p>
+                <p className="text-lg font-semibold mt-1">
+                  {submittedData[field.name] || "—"}
+                </p>
+                <p className="mt-2 text-sm text-red-500 italic">
+                  Reason: {field.reason}
+                </p>
               </div>
             ))}
           </div>
@@ -220,7 +262,6 @@ console.log("result===",result);
       )}
 
       {/* In Progress Fields */}
-    
 
       {/* Modal */}
       {showModal && (
@@ -234,7 +275,7 @@ console.log("result===",result);
                     {labelMap[field.name] || field.name}
                   </label>
 
-                  {field.name === 'shop_photo' ? (
+                  {field.name === "shop_photo" ? (
                     <UploadSingleFile
                       name="shop_photo"
                       customClass="col-span-2"
@@ -252,7 +293,9 @@ console.log("result===",result);
                     />
                   )}
 
-                  <p className="text-xs text-red-500 mt-1 italic">Reason: {field.reason}</p>
+                  <p className="text-xs text-red-500 mt-1 italic">
+                    Reason: {field.reason}
+                  </p>
                 </div>
               ))}
             </div>

@@ -6,10 +6,10 @@ import { FormData } from "@/helpers/interfaces";
 
 export const getuserList = createAsyncThunk<listResponse,FormData>(
   "v1/wholesale_request/list",
-  async (uuid:any, { dispatch, rejectWithValue }) => {
+  async (data:any, { dispatch, rejectWithValue }) => {
     try {
       // Corrected the URL to dynamically use the `uuid`
-      const res = await api.get<listResponse>(`/v1/wholesale_request/list/${uuid}`);
+      const res = await api.get<listResponse>(`/v1/wholesale_request/list/${data?.uuid}`);
       console.log("Response:", res);
       return res.data;  // Returning the response data to be used in the reducer
     } catch (error: any) {
