@@ -40,6 +40,7 @@ const AcceptedAndRejectedFieldsPage = () => {
 
   const { uuid } = useParams() as { uuid: string };
 
+  const [data,setData] = useState({})
   const [showModal, setShowModal] = useState(false);
   const [submittedData, setSubmittedData] = useState<Record<string, any>>({});
   const [acceptedFields, setAcceptedFields] = useState<string[]>([]);
@@ -53,7 +54,7 @@ const AcceptedAndRejectedFieldsPage = () => {
     const res = await dispatch(getuserList({ uuid }));
     const result = (res?.payload as any)?.data?.result;
     console.log("result===", result);
-
+    setData(result)
     if (!result) return;
 
     const accepted: string[] = [];
