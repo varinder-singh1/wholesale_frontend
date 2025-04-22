@@ -5,8 +5,29 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import Image from "next/image";
 
-const UploadSingleFile = ({ values, setValues, customClass, errors,name ,folder  }) => {
+interface UploadSingleFileProps {
+  values: Record<string, any>;
+  setValues: React.Dispatch<React.SetStateAction<any>>;
+  customClass?: string;
+  errors: Record<string, string>;
+  name: string;
+  folder: string;
+  customSetValue?: (name :string, val: string) => void;
+  value?: string;
+}
+
+const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
+  values,
+  setValues,
+  customClass,
+  errors,
+  name,
+  folder,
+  customSetValue, // Optional prop
+  value,
+}) => {
   const updateValue = (value) => {
+    customSetValue ? customSetValue(name,value) :
     setValues((prev) => ({
       ...prev,
       [name]: value,
@@ -17,8 +38,6 @@ const UploadSingleFile = ({ values, setValues, customClass, errors,name ,folder 
     const file = event.target.files[0];
     if (!file) return;
 
-    
-
     const formDat = new FormData();
     formDat.append("file", file);
     formDat.append("folder,", folder);
@@ -27,7 +46,7 @@ const UploadSingleFile = ({ values, setValues, customClass, errors,name ,folder 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_ADDRESS}/v1/upload?folder=${folder}`,
         formDat,
-     
+
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
@@ -54,11 +73,7 @@ const UploadSingleFile = ({ values, setValues, customClass, errors,name ,folder 
           <Image
             width={100}
             height={100}
-            src={
-              values[name].includes("http")
-                ? values[name]
-                : process.env.NEXT_PUBLIC_S3_IMG_URL + values[name]
-            }
+            src={process.env.NEXT_PUBLIC_S3_IMG_URL + ( value ? value : values[name])}
             alt="Uploaded Preview"
             className="w-16 h-auto object-cover rounded border"
           />

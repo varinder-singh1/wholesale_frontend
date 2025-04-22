@@ -22,7 +22,11 @@ const FieldSection = ({
   isRejected = false,
 }: FieldSectionProps) => {
   const getFieldsByStatus = (status: number) => {
-    return Object.entries(formData).filter(([_, field]) => field.status === status);
+ 
+console.log("ll",formData);
+
+
+    return Object.entries(formData).filter(([_, field]) => field?.status === status);
   };
 
   const fields = getFieldsByStatus(status);
@@ -35,6 +39,11 @@ const FieldSection = ({
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {fields.map(([key, field]) => (
+          // key != "country" &&    key != "state" &&
+          field.value && ![
+            'id', 'uuid', 'status', 'created_at', 'updated_at',
+            'deleted_at', 'createdAt', 'updatedAt', 'deletedAt',"device_detail"
+          ].includes(key) &&
           <div key={key} className={`border border-${color}-500 p-4 rounded shadow-sm`}>
             <p className="text-sm text-gray-500">
               {labelMap[key] || key}{" "}
@@ -45,16 +54,18 @@ const FieldSection = ({
             <div className="mt-1">
               {key === "shop_photo" ? (
                 <Image
+                height={100}
+                width={100}
                   src={`${process.env.NEXT_PUBLIC_S3_IMG_URL}${field.value}`}
                   alt="Shop Photo"
                   className="w-full h-full rounded-lg shadow-lg"
                 />
               ) : (
-                <p className="text-lg font-semibold">{field.value}</p>
+                <p className="text-lg font-semibold">{["country","state"].includes(key)? field.value.name :  field.value}</p>
               )}
             </div>
-            {isRejected && (
-              <p className="mt-2 text-sm text-red-500 italic">Reason: {field.reason}</p>
+            {field.description && (
+              <p className="mt-2 text-sm text-red-500 italic">Reason: {field.description}</p>
             )}
           </div>
         ))}

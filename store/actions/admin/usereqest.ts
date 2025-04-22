@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/store/axiosInstance";  // Make sure your axios instance is properly set up
-import { registerError } from "@/store/slices/authSlice";  // Your error handling action
+import { registerError, registerSuccess } from "@/store/slices/authSlice";  // Your error handling action
 import { listResponse } from "@/helpers/interfaces";  // Assuming the interface exists
 import { FormData } from "@/helpers/interfaces";
 
@@ -32,12 +32,16 @@ export const updateUser = createAsyncThunk<
   any,
   { uuid: any; data: any },
   { rejectValue: any }
->("v1/wholesale_request/update", async ({ uuid, data }, { rejectWithValue }) => {
+>("v1/wholesale_request/update", async ({ uuid, data }, {dispatch, rejectWithValue }) => {
   try {
     const res = await api.put(`/v1/wholesale_request/update_my_request/${uuid}`, data);
+      if (res.data.success) {
+            dispatch(registerSuccess(res.data));
+          }
     return res.data;
   } catch (error: any) {
     console.error(error.response?.data || error.message);
+    dispatch(registerError(error));
     return rejectWithValue(
       error.response?.data ?? {
         success: false,

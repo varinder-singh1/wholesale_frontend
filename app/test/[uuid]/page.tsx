@@ -51,34 +51,10 @@ const AcceptedAndRejectedFieldsPage = () => {
       'deleted_at', 'createdAt', 'updatedAt', 'deletedAt',
     ]);
 
-    const newData = Object.entries(result).reduce((acc, [key, entry]: any) => {
-      if (
-        excludedKeys.has(key) ||
-        !entry ||
-        typeof entry !== 'object' ||
-        !('status' in entry)
-      ) {
-        return acc;
-      }
+    
+console.log("result===",result);
 
-      const rawValue = entry.value;
-      const value = typeof rawValue === 'object' && rawValue?.name
-      ? rawValue.name
-      : rawValue || '';
-      console.log(key ,entry.value,"value")
-
-      acc[key] = {
-        value,
-        status: entry.status,
-        reason: entry.reason || 'Field rejected by admin.',
-      };
-      console.log(acc,
-        'cc'
-      )
-      return acc;
-    }, {} as Record<string, any>);
-
-    setFormData(newData);
+    setFormData(result);
   };
 
 
@@ -93,32 +69,33 @@ const AcceptedAndRejectedFieldsPage = () => {
       ...prev,
       [name]: {
         ...prev[name],
+        status : WHOLESALE_REQUEST_STATUS.pending ,
         value,
       },
     }));
   };
 
   const handleSubmit = async () => {
-    const updatedPayload = Object.fromEntries(
-      Object.entries(formData).map(([key, field]) => [
-        key,
-        {
-          value: field.value,
-          status: field.status === WHOLESALE_REQUEST_STATUS.rejected && field.originalValue !== field.value
-            ? WHOLESALE_REQUEST_STATUS.in_progress
-            : field.status,
-        },
-      ])
-    );
-    console.log(updatedPayload,'dada in payload')
-    const res = await dispatch(updateUser({ uuid, data: updatedPayload }));
+    // const updatedPayload = Object.fromEntries(
+    //   Object.entries(formData).map(([key, field]) => [
+    //     key,
+    //     {
+    //       value: field.value,
+    //       status: field.status === WHOLESALE_REQUEST_STATUS.rejected && field.originalValue !== field.value
+    //         ? WHOLESALE_REQUEST_STATUS.in_progress
+    //         : field.status,
+    //     },
+    //   ])
+    // );
+    // console.log(updatedPayload,'dada in payload')
+    console.log("formData",formData);
+    
+    const res = await dispatch(updateUser({ uuid, data: formData }));
     if (res?.payload?.success) setShowModal(false);
   };
 
 
-  const getFieldsByStatus = (status: number) => {
-    return Object.entries(formData).filter(([_, field]) => field.status === status);
-  };
+ 
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 text-black">
@@ -139,7 +116,7 @@ const AcceptedAndRejectedFieldsPage = () => {
         title="In Progress Fields"
         emoji="🟡"
         color="yellow"
-        status={WHOLESALE_REQUEST_STATUS.in_progress}
+        status={WHOLESALE_REQUEST_STATUS.pending}
         formData={formData}
         labelMap={labelMap}
       />
