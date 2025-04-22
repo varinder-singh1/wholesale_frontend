@@ -26,14 +26,17 @@ const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
   customSetValue, // Optional prop
   value,
 }) => {
-  const updateValue = (value) => {
-    customSetValue ? customSetValue(name,value) :
-    setValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const updateValue = (value: string) => {
+    if (customSetValue) {
+      customSetValue(name, value);
+    } else {
+      setValues((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
-
+  
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
