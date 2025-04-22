@@ -44,7 +44,7 @@ const WholeSaleSignUp: React.FC = () => {
 
         setDeviceDetails({ ip, type: deviceType });
         console.log('📱 Device Details:', { ip, deviceType });
-        setValues({...values ,device_detail :{ ip, deviceType } })
+        setValues({...values , device_detail :{ ip, deviceType } })
       } catch (error) {
         console.error('Error fetching IP:', error);
       }
