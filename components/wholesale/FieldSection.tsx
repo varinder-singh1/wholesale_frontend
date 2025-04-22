@@ -1,0 +1,77 @@
+import Image from "next/image";
+
+type FieldSectionProps = {
+  title: string;
+  color: string;
+  emoji: string;
+  status: number;
+  formData: Record<string, any>;
+  labelMap: Record<string, string>;
+  onFixRejected?: () => void;
+  isRejected?: boolean;
+};
+
+const FieldSection = ({
+  title,
+  color,
+  emoji,
+  status,
+  formData,
+  labelMap,
+  onFixRejected,
+  isRejected = false,
+}: FieldSectionProps) => {
+  const getFieldsByStatus = (status: number) => {
+    return Object.entries(formData).filter(([_, field]) => field.status === status);
+  };
+
+  const fields = getFieldsByStatus(status);
+  if (fields.length === 0) return null;
+
+  return (
+    <>
+      <h3 className={`text-xl font-semibold mb-4 text-${color}-600`}>
+        {emoji} {title}
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {fields.map(([key, field]) => (
+          <div key={key} className={`border border-${color}-500 p-4 rounded shadow-sm`}>
+            <p className="text-sm text-gray-500">
+              {labelMap[key] || key}{" "}
+              <span className={`text-${color}-600`}>
+                ({title})
+              </span>
+            </p>
+            <div className="mt-1">
+              {key === "shop_photo" ? (
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_S3_IMG_URL}${field.value}`}
+                  alt="Shop Photo"
+                  className="w-full h-full rounded-lg shadow-lg"
+                />
+              ) : (
+                <p className="text-lg font-semibold">{field.value}</p>
+              )}
+            </div>
+            {isRejected && (
+              <p className="mt-2 text-sm text-red-500 italic">Reason: {field.reason}</p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {isRejected && onFixRejected && (
+        <div className="mt-6">
+          <button
+            onClick={onFixRejected}
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          >
+            Fix Rejected Fields
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default FieldSection;
