@@ -41,18 +41,18 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const firstSegment = pathname.split("/")[1];
-    if (
-      firstSegment !== "sign-in" &&
-      firstSegment !== "signup" &&
-      firstSegment !== "login"
-    ) {
-      if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
-        router.push("/login");
-      }
-    }
-  }, [user, loading, router, pathname]);
+  // useEffect(() => {
+  //   const firstSegment = pathname.split("/")[1];
+  //   if (
+  //     firstSegment !== "sign-in" &&
+  //     firstSegment !== "signup" &&
+  //     firstSegment !== "login"
+  //   ) {
+  //     if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
+  //       router.push("/login");
+  //     }
+  //   }
+  // }, [user, loading, router, pathname]);
 
   useEffect(() => {
     listDepartments();

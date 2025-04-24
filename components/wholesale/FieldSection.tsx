@@ -1,5 +1,6 @@
 import Image from "next/image";
-
+import { useState } from "react";
+import ImageModal from "./ImageModel";
 type FieldSectionProps = {
   title: string;
   color: string;
@@ -21,8 +22,11 @@ const FieldSection = ({
   onFixRejected,
   isRejected = false,
 }: FieldSectionProps) => {
+  const [picshowModal, setPicshowModal] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState("");
+
   const getFieldsByStatus = (status: number) => {
- 
+ console.log(status,"this is status ")
 console.log("ll",formData);
 
 
@@ -31,7 +35,11 @@ console.log("ll",formData);
 
   const fields = getFieldsByStatus(status);
   if (fields.length === 0) return null;
-
+  console.log(picshowModal,"this is model")
+  const handleImageClick = (url: string) => {
+    setModalImageUrl(url);
+    setPicshowModal(true);
+  };
   return (
     <>
       <h3 className={`text-xl font-semibold mb-4 text-${color}-600`}>
@@ -54,17 +62,18 @@ console.log("ll",formData);
             <div className="mt-1">
               {key === "shop_photo" ? (
                 <Image
-                height={100}
-                width={100}
+                onClick={() => handleImageClick(`${process.env.NEXT_PUBLIC_S3_IMG_URL}${field.value}`)}
+                height={200}
+                width={200}
                   src={`${process.env.NEXT_PUBLIC_S3_IMG_URL}${field.value}`}
                   alt="Shop Photo"
-                  className="w-full h-full rounded-lg shadow-lg"
+                  className="w-[150px] h-[80px] rounded-lg shadow-lg"
                 />
               ) : (
                 <p className="text-lg font-semibold">{["country","state"].includes(key)? field.value.name :  field.value}</p>
               )}
             </div>
-            {field.description && (
+            {field.description && field.status !== 1 && (
               <p className="mt-2 text-sm text-red-500 italic">Reason: {field.description}</p>
             )}
           </div>
@@ -81,6 +90,11 @@ console.log("ll",formData);
           </button>
         </div>
       )}
+       <ImageModal
+        isOpen={picshowModal}
+        imageUrl={modalImageUrl}
+        onClose={() => setPicshowModal(false)}
+      />
     </>
   );
 };
