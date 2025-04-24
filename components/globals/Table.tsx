@@ -17,12 +17,12 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ apiHit, columns, tableData }) => {
   return (
-    <div className="relative overflow-x-auto scrollbar-minimized overflow-y-auto sm:rounded-lg border border-gray-200 rounded-lg">
+    <div className="relative overflow-x-auto scrollbar-minimized overflow-y-auto rounded-none sm border border-gray-200 ">
       <table className="w-full min-h-[150px] text-sm text-center text-gray-500">
-        <thead className="text-xs text-white uppercase bg-black text-lightthemecolor h-[55px]">
+        <thead className="text-xs text-black uppercase bg-gray-200 text-lightthemecolor h-[55px]">
           <tr>
             {columns.map((col, index) => (
-              <th scope="col" className="px-6 py-3" key={index}>
+              <th scope="col" className="px-6 py-3 font-bold border border-gray-300 font-sans" key={index}>
                 {col.title}
               </th>
             ))}
@@ -32,12 +32,12 @@ const Table: React.FC<TableProps> = ({ apiHit, columns, tableData }) => {
           {apiHit && tableData.length > 0 ? (
             tableData.map((row, ind) => (
               <tr
-                className="bg-lightthemecolor text-darkthemecolor border-b hover:bg-gray-50 "
+                className="bg-white border border-gray-300 font-sans hover:bg-gray-50 "
                 key={row._id || ind} // Fallback to index if _id is missing
               >
                 {columns.map((col, i) => (
                   <td
-                    className="px-6 py-4 whitespace-nowrap text-black font-semibold"
+                    className=" min-w-[100px]  font-sans font-medium whitespace-nowrap  border border-gray-300 text-black "
                     key={i}
                   >
                     {col.transform ? col.transform(row[col.key], row, ind) : row[col.key]}

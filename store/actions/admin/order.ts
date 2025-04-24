@@ -94,3 +94,32 @@ export const printlabel = createAsyncThunk<listResponse, FormData>(
     }
   }
 );
+
+
+export const getMyWholesaleOrder = createAsyncThunk<listResponse, FormData>(
+  "my_orders/list",
+  async (data, { dispatch, rejectWithValue }) => {
+    try {
+      // Convert FormData to an object for easy query param handling
+      const queryParams = new URLSearchParams(data as any).toString();
+
+      const res = await api.get<listResponse>(
+        `/v1/wholesale_order/my_orders?${queryParams}`
+      );
+      console.log("rr",res);
+      
+      return res.data;
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+      dispatch(registerError(error.response?.data));
+
+      return rejectWithValue(
+        error.response?.data ?? {
+          success: false,
+          message: "An error occurred",
+          errors: [],
+        }
+      );
+    }
+  }
+);

@@ -70,7 +70,7 @@ const ShopNavBar: React.FC<NavBarProps> = ({ open, setOpen,departments }) => {
                 {cartCount}
               </span>
             </Link>
-            <Link href="/user/orders">
+            <Link href="/wholesale/dashboard">
               <UserIcon className="h-6 w-6" />
             </Link>
             <button className="block md:hidden" onClick={() => setOpen?.(!open)}>

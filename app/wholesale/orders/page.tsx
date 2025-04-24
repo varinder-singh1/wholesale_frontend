@@ -1,6 +1,35 @@
+"use client"
+import Table from "@/components/globals/Table";
 import WholeSaleSidebar from "@/components/wholesale/WholeSaleSideBar";
+import { orders_colomn } from "@/helpers/tableColumn";
+import { getMyWholesaleOrder } from "@/store/actions/admin/order";
+import { AppDispatch } from "@/store/store";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 function Orders() {
+
+  const [data, setData] = useState<any>([]);
+  const [apiHit, setApiHit] = useState(false);
+const dispatch = useDispatch<AppDispatch>();
+
+
+ const getOrders = async () => {
+    try {
+      const res = await dispatch(getMyWholesaleOrder({})).unwrap();
+      if (res.success) {
+        console.log("res.data.result",res.data.result);
+        
+        setData(res.data.result);
+        setApiHit(true);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(()=>{
+    getOrders()
+  },[])
+
   const orders = [
     { id: "#1023", customer: "John Doe", total: "$500", status: "Completed", color: "text-green-600" },
     { id: "#1024", customer: "Jane Smith", total: "$1,200", status: "Pending", color: "text-yellow-600" },
@@ -8,34 +37,21 @@ function Orders() {
   ];
 
   return (
-    <div className="flex text-black min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 text-black p-2">
       {/* Sidebar */}
       {/* <WholeSaleSidebar /> */}
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
-        <h2 className="text-3xl font-bold text-gray-800">Orders</h2>
+      <div className="flex-1 p-2">
+        <h2 className="text-3xl font-bold  ">Orders</h2>
         <p className="text-gray-600 mt-2">View and manage customer orders.</p>
 
-        {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mt-6 gap-4">
-          <input
-            type="text"
-            placeholder="Search Orders..."
-            className="w-full md:w-1/3 p-2 border rounded-md"
-          />
-          <select className="p-2 border rounded-md">
-            <option value="">All Status</option>
-            <option value="completed">Completed</option>
-            <option value="pending">Pending</option>
-            <option value="shipped">Shipped</option>
-          </select>
-        </div>
+      
 
         {/* Orders Table */}
-        <div className="mt-6 bg-white p-6 rounded-lg shadow">
-          <h3 className="text-2xl font-semibold mb-4">Order List</h3>
-          <table className="w-full border-collapse border border-gray-200">
+        <div className="mt-6 bg-white p-2 rounded-lg shadow">
+          <h3 className="text-2xl font-semibold mb-4 ">Order List</h3>
+          {/* <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr className="bg-gray-100 text-left">
                 <th className="border p-3">Order ID</th>
@@ -54,7 +70,12 @@ function Orders() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
+             <Table
+        apiHit={apiHit}
+        columns={orders_colomn()} //
+        tableData={data}
+      />
         </div>
       </div>
     </div>

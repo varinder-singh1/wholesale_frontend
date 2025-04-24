@@ -1,7 +1,9 @@
 "use client";
 
+import { logoutUser } from "@/store/actions/auth";
+import { AppDispatch } from "@/store/store";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FaTachometerAlt,
   FaClipboardList,
@@ -10,6 +12,7 @@ import {
   FaUser,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 
 const menuItems = [
   { label: "Dashboard", icon: <FaTachometerAlt />, path: "dashboard" },
@@ -17,19 +20,34 @@ const menuItems = [
   { label: "Addresses", icon: <FaMapMarkerAlt />, path: "addresses" },
   { label: "Payment Methods", icon: <FaCreditCard />, path: "payment-methods" },
   { label: "Account Details", icon: <FaUser />, path: "details" },
-  { label: "Log Out", icon: <FaSignOutAlt />, path: "logout" },
+  // { label: "Log Out", icon: <FaSignOutAlt />, path: "logout" },
 ];
 
 const WholeSaleSidebar = () => {
+  
+  const router = useRouter();
   const pathname = usePathname();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const logoutHandler = async () => {
+    const response = await dispatch(logoutUser());
+    const res = response.payload as { status: boolean; message: string };
+    if (res?.status) {
+      router.push("/login");
+    }
+  };
 
   return (
     <aside className="w-64 bg-white shadow-lg border-r min-h-screen overflow-hidden">
       {/* Profile Section */}
       <div className="p-6 border-b flex flex-col items-center text-center">
-     
-        <h2 className="mt-3 text-lg font-semibold text-gray-800">Karan Dhiman</h2>
-        <button className="text-sm text-gray-500 hover:text-gray-700">Logout</button>
+        <h2 className="mt-3 text-lg font-semibold text-gray-800">
+          Karan Dhiman
+        </h2>
+        <button className="text-sm text-gray-500 hover:text-gray-700">
+          Logout
+        </button>
       </div>
 
       {/* Navigation */}
@@ -50,6 +68,23 @@ const WholeSaleSidebar = () => {
             {item.label}
           </Link>
         ))}
+
+        <button
+        onClick={()=>logoutHandler()}
+          className={`flex items-center gap-3 px-6 py-4 transition-all
+              ${
+                pathname === "false"
+                  ? "bg-gray-100 border-l-4 border-blue-600 text-blue-600 font-semibold"
+                  : "text-gray-700 hover:bg-gray-50"
+              }
+            `}
+        >
+          <span className="text-xl">
+            {" "}
+            <FaSignOutAlt />
+          </span>
+          LogOut
+        </button>
       </nav>
     </aside>
   );
