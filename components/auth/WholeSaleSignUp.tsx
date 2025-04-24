@@ -7,6 +7,7 @@ import { mapServerErrors } from "@/helpers/commonFunction";
 import { USER_ROLE } from "@/app/constants";
 import { useRouter } from "next/navigation";
 import DynamicForm, { FormField } from "../globals/DynamicForm";
+import TermCondation from "../globals/Fields/Term-Condtion";
 import {
   CountrySelect,
   StateSelect,
@@ -169,7 +170,17 @@ const WholeSaleSignUp: React.FC = () => {
         );
       },
     },
-    // { name: "shop_photo", label: "Shop Photo URL", type: "text" }
+//     { name: "term and condtions", label: "    ", customClass:"col-span-2", type: "checkbox",options: [
+//       { value: "", label: "I have read and agree to the website terms & conditions" },
+//       ], },
+{
+  name: "state",
+  label: "",
+  type: "custom",
+  customClass: "col-span-2",
+  customRender: () =>
+    <TermCondation />
+},
   ];
 
   const handleSubmit = async (
@@ -191,9 +202,9 @@ const WholeSaleSignUp: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center p-8 min-h-screen bg-gray-100">
+    <div className="flex  justify-center items-center p-8 min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-4xl">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        <h2 className="text-2xl  font-bold text-center text-gray-800 mb-6">
           Wholesale Sign-Up
         </h2>
         <DynamicForm
@@ -205,7 +216,10 @@ const WholeSaleSignUp: React.FC = () => {
           formFields={formFields}
           handleSubmit={handleSubmit}
           mode="add"
+          submitClass="col-span-2 flex justify-center"
+          submitBtnClass='w-1/2 mx-auto bg-black text-white rounded-md px-4 py-2 '
         />
+      
         <div className="mt-4 text-center">
           <p className="text-sm">
             Already have an account?{" "}
