@@ -182,6 +182,7 @@ const WholeSaleSignUp: React.FC = () => {
       const res = await dispatch(wholeSalesignUpAction(values)).unwrap();
       if (res.success) {
         setValues({});
+        router.push("request-send-successfully");
       }
     } catch (error) {
       const formErrors = mapServerErrors((error as any).errors, setErrors);
