@@ -55,6 +55,8 @@ interface DynamicFormProps<T extends Record<string, any>> {
   mode?: "add" | "edit";
   submitTitle?: string;
   formClassName?: string;
+  submitClass?: string;
+  submitBtnClass?: string;
 }
 
 const DynamicForm = <T extends Record<string, any>>({
@@ -66,6 +68,8 @@ const DynamicForm = <T extends Record<string, any>>({
   mode = "add",
   formClassName,
   submitTitle,
+  submitClass,
+  submitBtnClass
 }: DynamicFormProps<T>) => {
   const updateField = (name: string, value: string | number | boolean) => {
     setValues((prev: T) => ({ ...prev, [name]: value }));
@@ -170,13 +174,15 @@ const DynamicForm = <T extends Record<string, any>>({
 
           if (field.type === "checkbox") {
             return (
-              <CheckboxInput
+            //  <div  className={`${field.divClass ? field.divClass : ""}`}>
+               <CheckboxInput
                 key={index}
                 field={field}
                 values={values}
                 setFieldValue={updateField}
                 errors={errors}
               />
+            //  </div>
             );
           }
 
@@ -211,10 +217,10 @@ const DynamicForm = <T extends Record<string, any>>({
         })}
 
         {submitTitle && (
-          <div className="mt-6">
+          <div className={submitClass? submitClass :"mt-6"}>
             <button
               type="submit"
-              className="w-full hover:bg-[rgb(249,188,96)] hover:text-black rounded-md px-4 py-2 text-base font-medium shadow-sm bg-black text-white"
+              className={submitBtnClass?submitBtnClass:"w-full hover:bg-[rgb(249,188,96)] hover:text-black rounded-md px-4 py-2 text-base font-medium shadow-sm bg-black text-white"}
             >
               {submitTitle}
             </button>

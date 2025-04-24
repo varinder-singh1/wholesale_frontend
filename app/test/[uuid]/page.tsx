@@ -41,6 +41,7 @@ const AcceptedAndRejectedFieldsPage = () => {
 
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [showModal, setShowModal] = useState(false);
+
   const fetchData = async () => {
     const res = await dispatch(getuserList({ uuid }));
     const result = (res?.payload as any)?.data?.result;
@@ -109,7 +110,7 @@ console.log("result===",result);
         status={WHOLESALE_REQUEST_STATUS.approved}
         formData={formData}
         labelMap={labelMap}
-      />
+      />  
 
       {/* In Progress Fields */}
       <FieldSection
