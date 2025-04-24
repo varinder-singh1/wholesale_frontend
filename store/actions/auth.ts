@@ -189,7 +189,7 @@ export const sendOtp  = createAsyncThunk<listResponse, FormData>(
   "verify_otp/add",
   async (data, { dispatch, rejectWithValue }) => {
     try {
-      const res = await api.post<listResponse>(`/v1/auth/send_otp/`, data);
+      const res = await api.post<listResponse>(`/v1/auth/send_otp_wholesale/`, data);
       if (res.data.success) {
         // dispatch(registerSuccess(res.data));
       }

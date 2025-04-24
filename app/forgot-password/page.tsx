@@ -36,7 +36,7 @@ export default function ForgotPasswordInput() {
       const res = await dispatch(setPassword({ ...values }));
       console.log("res===", (res.payload as any).success);
       if ((res.payload as any).success) {
-        router.push(`/user/orders`);
+        router.push(`/`);
       }else{
         const formErrors = mapServerErrors((res.payload  as any).errors, setErrors);
       }

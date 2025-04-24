@@ -93,6 +93,11 @@ export default function Register() {
                 className="w-full mt-1 border rounded p-2 border-black"
           
               />
+                <div className="text-right mt-1">
+                <Link href="/forgot-password" className="text-blue-500 text-sm hover:underline">
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
           </div>
 

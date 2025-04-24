@@ -18,7 +18,7 @@ const menuItems = [
   { label: "Dashboard", icon: <FaTachometerAlt />, path: "dashboard" },
   { label: "Orders", icon: <FaClipboardList />, path: "orders" },
   { label: "Addresses", icon: <FaMapMarkerAlt />, path: "addresses" },
-  { label: "Payment Methods", icon: <FaCreditCard />, path: "payment-methods" },
+  // { label: "Payment Methods", icon: <FaCreditCard />, path: "payment-methods" },
   { label: "Account Details", icon: <FaUser />, path: "details" },
   // { label: "Log Out", icon: <FaSignOutAlt />, path: "logout" },
 ];
