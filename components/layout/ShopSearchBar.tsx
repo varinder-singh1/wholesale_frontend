@@ -7,9 +7,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { getProductForShop } from "@/store/actions/admin/product";
 import { XIcon } from "lucide-react";
+import { useSelector } from "react-redux";
 
 interface Product {
   slug: string;
@@ -34,7 +35,7 @@ const categories = [
 
 const SearchBar: React.FC<BarProps> = ({ departments }) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const { loading, user } = useSelector((state: RootState) => state.auth);
   const [apiHit, setApiHit] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [search, setSearch] = useState<string>("");
@@ -118,6 +119,7 @@ listProducts(search)
         {/* Category Dropdown (Hidden on Mobile) */}
         <button
           onClick={() => {
+            
             setShowDropdown((prev) => !prev);
             setSearch("");
           }}
@@ -154,8 +156,11 @@ listProducts(search)
         <input
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
-            console.log("e.target.value",e.target.value);
+            if(user){
+              setSearch(e.target.value);
+              console.log("e.target.value",e.target.value);
+            }
+       
             
             // listProducts(e.target.value);
           }}
