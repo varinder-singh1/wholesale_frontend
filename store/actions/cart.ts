@@ -253,8 +253,7 @@ export const calculatePrice = (row) => {
         variation.options.reduce((optSum, option) => optSum + option.wholesale_price, 0)
     );
   }, 0);
-console.log("variationPrice",variationPrice);
-
+ 
   return variationPrice + price * row.quantity;
 };
 

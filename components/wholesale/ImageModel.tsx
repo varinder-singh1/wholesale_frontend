@@ -24,7 +24,7 @@ const ImageModal = ({ imageUrl, isOpen, onClose }: ImageModalProps) => {
         width={800}
           src={imageUrl}
           alt="Preview"
-          className= "w-[400px] md:w-[800px] h-full object-contain rounded-md"
+          className= "w-[350px] md:w-[700px] h-full object-contain rounded-md"
         />
       </div>
     </div>

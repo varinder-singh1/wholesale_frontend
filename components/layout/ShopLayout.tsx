@@ -48,7 +48,8 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({ children }) => {
       firstSegment !== "signup" &&
       firstSegment !== "login"&&
       firstSegment !== "request-send-successfully"&&
-            firstSegment !== "forgot-password"
+            firstSegment !== "forgot-password" &&
+              firstSegment !== "my-request"
     ) {
       if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
         router.push("/login");

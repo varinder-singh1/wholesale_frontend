@@ -64,7 +64,7 @@ console.log("result===",result);
     fetchData();
   }, [uuid, dispatch]);
  
-  const handleChange = (name: string, value: string) => {
+  const handleChange = (name: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [name]: {
@@ -76,18 +76,7 @@ console.log("result===",result);
   };
 
   const handleSubmit = async () => {
-    // const updatedPayload = Object.fromEntries(
-    //   Object.entries(formData).map(([key, field]) => [
-    //     key,
-    //     {
-    //       value: field.value,
-    //       status: field.status === WHOLESALE_REQUEST_STATUS.rejected && field.originalValue !== field.value
-    //         ? WHOLESALE_REQUEST_STATUS.in_progress
-    //         : field.status,
-    //     },
-    //   ])
-    // );
-    // console.log(updatedPayload,'dada in payload')
+  
     console.log("formData",formData);
     
     const res = await dispatch(updateUser({ uuid, data: formData }));
