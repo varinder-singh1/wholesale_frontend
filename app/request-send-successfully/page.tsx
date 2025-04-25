@@ -30,7 +30,7 @@ const requestSend = () => {
         </motion.div>
 
         <h2 className="text-2xl md:text-3xl font-bold mt-6 text-gray-800">
-          Request Send Successfully
+          Request Sent Successfully
         </h2>
         <p className="text-gray-500 mt-2 w-full md:w-[540px]">
         Thank you for signing up for a Trade Account! We’re reviewing your request and will notify you once it’s approved. For any queries, please contact <br /> <Link className="text-blue-600" href="mailto:sales@kayhanaudio.com.au">sales@kayhanaudio.com.au.</Link>
