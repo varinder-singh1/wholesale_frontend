@@ -9,9 +9,9 @@ const SteeringWheelSlider = () => {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const images = [
-    "https://kayhanaudio.com.au/wp-content/uploads/2023/02/1-10-1.jpg",
-    "https://kayhanaudio.com.au/wp-content/uploads/2023/02/6-9.jpg",
-    "https://kayhanaudio.com.au/wp-content/uploads/2023/02/5-9-1.jpg",
+    "/1.webp",
+    "/2.webp",
+    "/3.webp"
   ];
 
   const settings =useMemo(

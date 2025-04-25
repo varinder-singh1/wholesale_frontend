@@ -17,8 +17,8 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ apiHit, columns, tableData }) => {
   return (
-    <div className="relative overflow-x-auto scrollbar-minimized overflow-y-auto rounded-none sm border border-gray-200 ">
-      <table className="w-full min-h-[150px] text-sm text-center text-gray-500">
+    <div className="relative overflow-x-auto w-full overflow-y-auto rounded-none sm border border-gray-200 ">
+      <table className="w-full min min-h-[150px] text-sm text-center text-gray-500">
         <thead className="text-xs text-black uppercase bg-gray-200 text-lightthemecolor h-[55px]">
           <tr>
             {columns.map((col, index) => (

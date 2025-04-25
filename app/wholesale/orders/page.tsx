@@ -11,24 +11,24 @@ function Orders() {
 
   const [data, setData] = useState<any>([]);
   const [apiHit, setApiHit] = useState(false);
-const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
 
 
- const getOrders = async () => {
+  const getOrders = async () => {
     try {
       const res = await dispatch(getMyWholesaleOrder({})).unwrap();
       if (res.success) {
-        console.log("res.data.result",res.data.result);
-        
+        console.log("res.data.result", res.data.result);
+
         setData(res.data.result);
         setApiHit(true);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getOrders()
-  },[])
+  }, [])
 
   const orders = [
     { id: "#1023", customer: "John Doe", total: "$500", status: "Completed", color: "text-green-600" },
@@ -37,46 +37,29 @@ const dispatch = useDispatch<AppDispatch>();
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 text-black p-2">
-      {/* Sidebar */}
-      {/* <WholeSaleSidebar /> */}
+    <div className="">
+
 
       {/* Main Content */}
-      <div className="flex-1 p-2">
+      <div className="p-2">
         <h2 className="text-3xl font-bold  ">Orders</h2>
         <p className="text-gray-600 mt-2">View and manage customer orders.</p>
 
-      
+
 
         {/* Orders Table */}
-        <div className="mt-6 bg-white p-2 rounded-lg shadow">
-          <h3 className="text-2xl font-semibold mb-4 ">Order List</h3>
-          {/* <table className="w-full border-collapse border border-gray-200">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="border p-3">Order ID</th>
-                <th className="border p-3">Customer</th>
-                <th className="border p-3">Total</th>
-                <th className="border p-3">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="border p-3">{order.id}</td>
-                  <td className="border p-3">{order.customer}</td>
-                  <td className="border p-3">{order.total}</td>
-                  <td className={`border p-3 font-medium ${order.color}`}>{order.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
-             <Table
-        apiHit={apiHit}
-        columns={orders_colomn()} //
-        tableData={data}
-      />
+        <div className="mt-6  bg-white p-2 sm:p-4 md:p-6 rounded-lg shadow w-[350px] sm:w-[60%] lg:w-full overflow-hidden">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4">Order List</h3>
+
+          <div className="w-full overflow-x-auto">
+            <Table
+              apiHit={apiHit}
+              columns={orders_colomn()}
+              tableData={data}
+            />
+          </div>
         </div>
+
       </div>
     </div>
   );

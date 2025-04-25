@@ -102,7 +102,7 @@ export default function Home() {
         <SteeringWheelSection />
         {/* <SteeringWheelSkeleton /> */}
       </div>
-      <TestSection />
+      {/* <TestSection /> */}
       <div className="flex flex-col gap-2">
         <Accesories />
       </div>

@@ -49,7 +49,7 @@ export default function Register() {
       }
     } catch (error) {
       console.log(error);
-
+      
       const formErrors = mapServerErrors((error as any).errors, setErrors);
       console.error("Login failed:", formErrors);
     }
@@ -78,7 +78,7 @@ export default function Register() {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full mt-1 border rounded p-2 border-black"
+                className="w-full mt-1 text-black border rounded p-2 border-black"
               
               />
             </div>
@@ -90,7 +90,7 @@ export default function Register() {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full mt-1 border rounded p-2 border-black"
+                className="w-full mt-1 border text-black rounded p-2 border-black"
           
               />
                 <div className="text-right mt-1">

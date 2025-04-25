@@ -51,7 +51,7 @@ export default function ForgotPasswordInput() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] bg-gray-100 px-4">
       {/* Email Form */}
-      <div className="bg-white p-6 rounded-lg shadow-lg w-[30rem]">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-[98%] md:w-[30rem]">
         <h2 className="text-xl font-semibold text-gray-700 mb-4 text-center">
           Forgot Password?
         </h2>
@@ -72,7 +72,7 @@ export default function ForgotPasswordInput() {
             onClick={handleSubmit}
             className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
           >
-            Send Otp
+            Send OTP
           </button>
         )}
 
