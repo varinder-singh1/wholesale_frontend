@@ -1,7 +1,11 @@
 "use client";
-import { getAddress } from "@/store/actions/user/address";
+import BillingForm from "@/components/checkout/BillingAddress";
+import DeleteModal from "@/components/globals/DeleteModel";
+import Loader from "@/components/globals/Loader";
+import AddAddressForm from "@/components/user/AddAddress";
+import { deleteAddress, getAddress } from "@/store/actions/user/address";
 import { AppDispatch } from "@/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 function AddressPage() {
@@ -33,7 +37,12 @@ function AddressPage() {
     state: "",
     zip: "",
   });
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [billingErrors, setBillingErrors] = useState({});
+  const [data, setData] = useState<any>([]);
+  const [apiHit, setApiHit] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [billingAddress, setBillingAddress] = useState({});
   // Handle Input Change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewAddress({ ...newAddress, [e.target.name]: e.target.value });
@@ -41,7 +50,13 @@ function AddressPage() {
 
   // Add New Address
   const handleAddAddress = () => {
-    if (!newAddress.name || !newAddress.street || !newAddress.city || !newAddress.state || !newAddress.zip) {
+    if (
+      !newAddress.name ||
+      !newAddress.street ||
+      !newAddress.city ||
+      !newAddress.state ||
+      !newAddress.zip
+    ) {
       alert("Please fill in all fields.");
       return;
     }
@@ -51,51 +66,113 @@ function AddressPage() {
     setNewAddress({ name: "", street: "", city: "", state: "", zip: "" }); // Reset form
   };
 
-  
   const dispatch = useDispatch<AppDispatch>();
 
   const getMyAddress = async () => {
     try {
       const res = await dispatch(getAddress({})).unwrap();
       if (res.success) {
-        console.log("res.data.result======",res.data.result);
-        
-        // setData(res.data.result);
-        // setApiHit(true);
+        console.log("res.data.result======", res.data.result);
+
+        setData(res.data.result);
+        setApiHit(true);
       }
     } catch (error) {}
   };
 
+  const deletAddressF = async () => {
+    await dispatch(deleteAddress(billingAddress as any));
+    setIsDeleteOpen(false);
+    setBillingAddress({});
+    getMyAddress();
+  };
+
+  useEffect(() => {
+    getMyAddress();
+  }, []);
+
   return (
     <div className="flex text-black min-h-screen bg-gray-100">
+      <DeleteModal
+        open={isDeleteOpen}
+        setOpen={setIsDeleteOpen}
+        deleteRecord={deletAddressF}
+      />
       {/* Main Content */}
       <div className="flex-1 p-6">
         <h2 className="text-3xl font-bold text-gray-800">Saved Addresses</h2>
-        <p className="text-gray-600 mt-2">Manage your shipping and billing addresses.</p>
-
-        {/* Address List */}
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {addresses.map((address) => (
-            <div key={address.id} className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold">{address.name}</h3>
-              <p className="text-gray-600">{address.street}</p>
-              <p className="text-gray-600">{address.city}, {address.state} {address.zip}</p>
-              <button className="mt-4 px-4 py-2 text-red-500 border border-red-500 rounded-md hover:bg-red-100">
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Add New Address Button */}
+        <p className="text-gray-600 mt-2">
+          Manage your shipping and billing addresses.
+        </p>
         <button
           className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsOpen(true)}
         >
           Add New Address
         </button>
-      </div>
+        {/* Address List */}
+        {apiHit ? (
+          <>
+            <div className="mt-6 grid  gap-6 md:grid-cols-2">
+              {data.length > 0 &&
+                data.map((address) => (
+                  <div
+                    key={address.id}
+                    className="bg-white p-6 rounded-lg shadow"
+                  >
+                    <h3 className="text-xl font-semibold">{address.name}</h3>
+                    <p className="text-gray-600">{address.street_address}</p>
+                    <p className="text-gray-600">
+                      {address.city}, {address.state.name}, {address.postcode}
+                    </p>
+                    <div className="gap-4 flex">
+                      <button
+                        onClick={() => {
+                          setIsDeleteOpen(true);
+                          setBillingAddress(address);
+                        }}
+                        className="mt-4 px-4 py-2 text-red-500 border border-red-500 rounded-md hover:bg-red-100"
+                      >
+                        Remove
+                      </button>
+                      <button
+                        onClick={() => {
+                          setBillingAddress(address);
+                          setIsOpen(true);
+                        }}
+                      className="mt-4 px-4 py-2 text-red-500 border border-red-500 rounded-md hover:bg-red-100">
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+            {data.length == 0 && (
+              <div className="flex  flex-col items-center justify-center p-10 bg-gray-100 rounded-lg">
+                <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+                  No Address Found
+                </h3>
+                <p className="text-gray-500">
+                  You have not added any addresses yet.
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          <Loader />
+        )}
 
+        {/* Add New Address Button */}
+      </div>
+      <AddAddressForm
+        getMyAddress={getMyAddress}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        setBillingErrors={setBillingErrors}
+        billingErrors={billingErrors}
+        setBillingAddress={setBillingAddress}
+        billingAddress={billingAddress}
+      />
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
