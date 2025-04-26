@@ -204,10 +204,10 @@ const Detail = () => {
           <h1 className="text-xl sm:text-3xl lg:w-10/1 font-bold font-serif text-gray-800">
             {(product as any).name}
           </h1>
-          <p className="text-2xl text-black">
+          <p className="text-2xl text-green-500 font-semibold">
             {" "}
             {(product as any).wholesale_price !== 0
-              ? (product as any).wholesale_price
+              ? "$ "+(product as any).wholesale_price
               : "--"}
           </p>
           <div className="flex flex-row gap-2 dark:text-black">
