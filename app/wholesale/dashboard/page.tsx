@@ -1,18 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import {
-  FaClipboardList,
-  FaCreditCard,
-  FaShoppingCart,
-} from "react-icons/fa";
+import { FaClipboardList, FaCreditCard, FaShoppingCart } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { getGraphData, statsDataA } from "@/store/actions/wholesale/dashboard";
+import InfoCard from "@/components/footer/infoCard";
+import ChartComponent from "@/components/wholesale/ChartComponent";
+import DateRange from "@/components/wholesale/DateRange";
 
 // Dynamic chart import
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const Dashboard: React.FC = () => {
-  const [selectedSales, setSelectedSales] = useState<keyof typeof salesData>("lastYear");
-  const [chartType, setChartType] = useState<"bar" | "line" | "area" | "pie" | "donut">("bar");
+
+
+  const dispatch = useDispatch<AppDispatch>();
+  const [selectedSales, setSelectedSales] =
+    useState<keyof typeof salesData>("lastYear");
+  const [chartType, setChartType] = useState<
+    "bar" | "line" | "area" | "pie" | "donut"
+  >("bar");
 
   const salesData = {
     lastYear: {
@@ -26,7 +34,9 @@ const Dashboard: React.FC = () => {
       title: "Last Month Sales",
     },
     lastWeek: {
-      series: [{ name: "Sales", data: [5000, 5500, 6000, 6200, 6400, 7000, 7500] }],
+      series: [
+        { name: "Sales", data: [5000, 5500, 6000, 6200, 6400, 7000, 7500] },
+      ],
       categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       title: "Last Week Sales",
     },
@@ -53,43 +63,78 @@ const Dashboard: React.FC = () => {
 
   const chartSeries = salesData[selectedSales].series;
 
+  const [statData, setStatData] = useState<any>({});
+  const [saleData, setSaleData] = useState<any>();
+
+  const getStatsData = async (data) => {
+    try {
+      const res = await dispatch(statsDataA(data)).unwrap();
+      if (res.success) {
+        setStatData(res.data.result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getDashboardData = async (data) => {
+    try {
+      const res = await dispatch(getGraphData(data)).unwrap();
+      if (res.success) {
+        console.log("res.data.result===",res.data.result);
+        
+        setSaleData(res.data.result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStatsData({});
+    getDashboardData({ this_year: true })
+  }, []);
+
+  const onSelect = (d) => {
+    getDashboardData(d);
+    // getStatsData(d);
+  };
+
   return (
     <div className="h-full bg-gray-100 text-black p-4 sm:p-6">
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Dashboard Overview</h2>
-      <p className="text-gray-600 mt-2 text-sm sm:text-base">Manage your account, orders, and settings.</p>
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
+        Dashboard Overview
+      </h2>
+      <p className="text-gray-600 mt-2 text-sm sm:text-base">
+        Manage your account, orders, and settings.
+      </p>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-6">
-        {[
-          { title: "Total Orders", value: "1,230", icon: <FaClipboardList className="text-blue-500" /> },
-          { title: "Revenue", value: "$50,000", icon: <FaCreditCard className="text-yellow-500" /> },
-          { title: "Pending Orders", value: "87", icon: <FaShoppingCart className="text-red-500" /> },
-        ].map((stat, index) => (
-          <div key={index} className="bg-white p-4 sm:p-6 rounded-lg shadow flex items-center gap-4">
-            <div className="text-2xl sm:text-3xl">{stat.icon}</div>
-            <div>
-              <p className="text-sm sm:text-base text-gray-600">{stat.title}</p>
-              <h3 className="text-lg sm:text-2xl font-semibold">{stat.value}</h3>
-            </div>
-          </div>
-        ))}
+       
+        <InfoCard title={"Total Orders"} value={statData?.totalOrders || 0} icon={ <FaClipboardList className="text-blue-500" />} />
+        <InfoCard title={"Total Purchase Value"} value={statData?.totalSales || 0} icon={ <FaCreditCard className="text-yellow-500" />} />
+        <InfoCard title={"Pending Orders"} value={statData?.pendingOrder || 0} icon={ <FaShoppingCart className="text-red-500" />} />
+  
       </div>
 
       {/* Chart Options */}
       <div className="mt-8 flex flex-wrap gap-2 sm:gap-4 items-center">
-        {Object.keys(salesData).map((option) => (
+        {/* {Object.keys(salesData).map((option) => (
           <button
             key={option}
             onClick={() => setSelectedSales(option as keyof typeof salesData)}
             className={`px-3 py-2 rounded-md text-sm sm:text-base ${
-              selectedSales === option ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"
+              selectedSales === option
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
           >
             {salesData[option as keyof typeof salesData].title}
           </button>
-        ))}
+        ))} */}
 
-        <select
+        {/* <select
           value={chartType}
           onChange={(e) => setChartType(e.target.value as typeof chartType)}
           className="p-2 border rounded-md bg-white text-sm sm:text-base"
@@ -99,18 +144,29 @@ const Dashboard: React.FC = () => {
           <option value="area">Area Chart</option>
           <option value="pie">Pie Chart</option>
           <option value="donut">Donut Chart</option>
-        </select>
+        </select> */}
       </div>
 
       {/* Chart */}
       <div className="mt-8 bg-white p-4 sm:p-6 rounded-lg shadow">
-        <h3 className="text-lg sm:text-xl font-semibold mb-4">{salesData[selectedSales].title}</h3>
-        <Chart options={chartOptions} series={chartSeries} type={chartType} height={300} />
+        <h3 className="text-lg sm:text-xl font-semibold mb-4">
+          {salesData[selectedSales].title}
+        </h3>
+        <DateRange onSelect={onSelect} />
+        {/* <Chart
+          options={chartOptions}
+          series={chartSeries}
+          type={chartType}
+          height={300}
+        /> */}
+        <ChartComponent saleData={saleData} />
       </div>
 
       {/* Table */}
-      <div className="mt-10 bg-white p-4 sm:p-6 rounded-lg shadow">
-        <h3 className="text-lg sm:text-2xl font-semibold mb-4">Recent Orders</h3>
+      {/* <div className="mt-10 bg-white p-4 sm:p-6 rounded-lg shadow">
+        <h3 className="text-lg sm:text-2xl font-semibold mb-4">
+          Recent Orders
+        </h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-200 text-left text-sm sm:text-base">
             <thead>
@@ -123,21 +179,41 @@ const Dashboard: React.FC = () => {
             </thead>
             <tbody>
               {[
-                { id: "#1023", customer: "John Doe", total: "$500", status: "Completed", color: "text-green-600" },
-                { id: "#1024", customer: "Jane Smith", total: "$1,200", status: "Pending", color: "text-yellow-600" },
-                { id: "#1025", customer: "Mark Taylor", total: "$2,500", status: "Shipped", color: "text-blue-600" },
+                {
+                  id: "#1023",
+                  customer: "John Doe",
+                  total: "$500",
+                  status: "Completed",
+                  color: "text-green-600",
+                },
+                {
+                  id: "#1024",
+                  customer: "Jane Smith",
+                  total: "$1,200",
+                  status: "Pending",
+                  color: "text-yellow-600",
+                },
+                {
+                  id: "#1025",
+                  customer: "Mark Taylor",
+                  total: "$2,500",
+                  status: "Shipped",
+                  color: "text-blue-600",
+                },
               ].map((order, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="border p-3">{order.id}</td>
                   <td className="border p-3">{order.customer}</td>
                   <td className="border p-3">{order.total}</td>
-                  <td className={`border p-3 font-medium ${order.color}`}>{order.status}</td>
+                  <td className={`border p-3 font-medium ${order.color}`}>
+                    {order.status}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { AppDispatch } from "@/store/store";
 import { checkVariations } from "@/store/actions/admin/variation";
 import VariationsForAddOn from "./VariationsForAddOn";
 import { IN_STOCK } from "@/app/constants";
+import toast from "react-hot-toast";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -54,6 +55,10 @@ const AddOn = ({ extras = [], setAddOns, addOns }) => {
   
 
   const handleCheckboxChange = async (data) => {
+    if (!(data as any).wholesale_price) {
+      toast.error("Please contact to support for this product");
+      return ;
+    }
     console.log(data);
     setCurrentData(data)
     if (!addOns.some((r) => r.id == data.id)) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { logoutUser } from "@/store/actions/auth";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -12,6 +12,7 @@ import {
   FaUser,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 const menuItems = [
@@ -24,11 +25,11 @@ const menuItems = [
 ];
 
 const WholeSaleSidebar = () => {
-  
   const router = useRouter();
   const pathname = usePathname();
 
   const dispatch = useDispatch<AppDispatch>();
+  const { loading, user } = useSelector((state: RootState) => state.auth);
 
   const logoutHandler = async () => {
     const response = await dispatch(logoutUser());
@@ -43,9 +44,12 @@ const WholeSaleSidebar = () => {
       {/* Profile Section */}
       <div className="p-6 border-b flex flex-col items-center text-center">
         <h2 className="mt-3 text-lg font-semibold text-gray-800">
-          Karan Dhiman
+          {user?.name}
         </h2>
-        <button className="text-sm text-gray-500 hover:text-gray-700">
+        <button
+          onClick={() => logoutHandler()}
+          className="text-sm text-gray-500 hover:text-gray-700"
+        >
           Logout
         </button>
       </div>
@@ -70,7 +74,7 @@ const WholeSaleSidebar = () => {
         ))}
 
         <button
-        onClick={()=>logoutHandler()}
+          onClick={() => logoutHandler()}
           className={`flex items-center gap-3 px-6 py-4 transition-all
               ${
                 pathname === "false"

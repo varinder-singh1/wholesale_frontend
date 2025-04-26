@@ -1,5 +1,8 @@
 "use client";
+import { getAddress } from "@/store/actions/user/address";
+import { AppDispatch } from "@/store/store";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 function AddressPage() {
   const [addresses, setAddresses] = useState([
@@ -46,6 +49,21 @@ function AddressPage() {
     setAddresses([...addresses, { ...newAddress, id: addresses.length + 1 }]);
     setIsModalOpen(false); // Close modal
     setNewAddress({ name: "", street: "", city: "", state: "", zip: "" }); // Reset form
+  };
+
+  
+  const dispatch = useDispatch<AppDispatch>();
+
+  const getMyAddress = async () => {
+    try {
+      const res = await dispatch(getAddress({})).unwrap();
+      if (res.success) {
+        console.log("res.data.result======",res.data.result);
+        
+        // setData(res.data.result);
+        // setApiHit(true);
+      }
+    } catch (error) {}
   };
 
   return (

@@ -3,24 +3,23 @@ import Image from "next/image";
 
 interface InfoCardProps {
   title: string;
-  content: string;
-  image?: string;  // Optional since not all cards might have an image
+  icon: any;
+  value?: any;  // Optional since not all cards might have an image
 }
 
-const InfoCard: React.FC<InfoCardProps> = ({ title, content, image }) => (
-  <div className="p-6 shadow-lg rounded-lg bg-white text-center space-y-4">
-    {image && (
-      <Image
-        src={image}
-        alt={title}
-        width={150}
-        height={75}
-        className="mx-auto"
-      />
-    )}
-    <h4 className="text-xl font-semibold">{title}</h4>
-    <p className="text-gray-600 text-sm">{content}</p>
+const InfoCard: React.FC<InfoCardProps> = ({ title, icon, value }) => (
+  <div
+ 
+  className="bg-white p-4 sm:p-6 rounded-lg shadow flex items-center gap-4"
+>
+  <div className="text-2xl sm:text-3xl">{icon}</div>
+  <div>
+    <p className="text-sm sm:text-base text-gray-600">{title}</p>
+    <h3 className="text-lg sm:text-2xl font-semibold">
+      {value}
+    </h3>
   </div>
+</div>
 );
 
 export default InfoCard;
