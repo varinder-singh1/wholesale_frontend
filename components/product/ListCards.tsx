@@ -125,7 +125,7 @@ const ListCards = () => {
                 totalPages={totalPage}
                 currentPage={currentPage}
                 setCurrentPage={(page: number) => list(page, searchParams)}
-                limit={4}
+                limit={20}
                 showPagination={showPagination}
                 tableDataLength={tableData.length}
               />
