@@ -5,7 +5,7 @@ import { FaClipboardList, FaCreditCard, FaShoppingCart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getGraphData, statsDataA } from "@/store/actions/wholesale/dashboard";
-import InfoCard from "@/components/footer/infoCard";
+import InfoDashboardCard from "@/components/wholesale/InfoDashboardCard";
 import ChartComponent from "@/components/wholesale/ChartComponent";
 import DateRange from "@/components/wholesale/DateRange";
 
@@ -112,9 +112,9 @@ const Dashboard: React.FC = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-6">
        
-        <InfoCard title={"Total Orders"} value={statData?.totalOrders || 0} icon={ <FaClipboardList className="text-blue-500" />} />
-        <InfoCard title={"Total Purchase Value"} value={statData?.totalSales || 0} icon={ <FaCreditCard className="text-yellow-500" />} />
-        <InfoCard title={"Pending Orders"} value={statData?.pendingOrder || 0} icon={ <FaShoppingCart className="text-red-500" />} />
+        <InfoDashboardCard title={"Total Orders"} value={statData?.totalOrders || 0} icon={ <FaClipboardList className="text-blue-500" />} />
+        <InfoDashboardCard title={"Total Purchase Value"} value={statData?.totalSales || 0} icon={ <FaCreditCard className="text-yellow-500" />} />
+        <InfoDashboardCard title={"Pending Orders"} value={statData?.pendingOrder || 0} icon={ <FaShoppingCart className="text-red-500" />} />
   
       </div>
 
