@@ -8,11 +8,14 @@ import { RootState } from "@/store/store";
 import { LOCAL_PICKUP, STANDARD_DELIVERY } from "@/app/constants";
 import toast from "react-hot-toast";
 import AfterPay from "./Afterpay";
+import ZipPay from "./ZipPay";
+import { GiZipper } from "react-icons/gi";
 
 const paymentMethods = [
   // { id: "credit_card", name: "Credit Card", icon: <FaCcVisa /> },
   // { id: "paypal", name: "PayPal", icon: <FaCcPaypal /> },
   { id: "afterpay", name: "After Pay", icon: <FaCcVisa /> },
+  { id: "zip_pay", name: "Zippay", icon: <GiZipper /> },
 ];
 
 const PaymentSelector = ({
@@ -154,6 +157,19 @@ const PaymentSelector = ({
               shippingAddress={sameAsBilling ? billingAddress : shippingAddress}
             />
           )}
+                {selectedMethod === "zip_pay" && (
+          
+          <ZipPay
+            deviceDetails={deviceDetails}
+            selectedShipping={selectedShipping}
+            discount={discount}
+            spiner={spiner}
+            setSpiner={setSpiner}
+            productData={productData.result}
+            billingAddress={billingAddress}
+            shippingAddress={sameAsBilling ? billingAddress : shippingAddress}
+          />
+        )}
         </div>
       )}
     </div>
