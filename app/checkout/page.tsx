@@ -1,11 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FaPaypal } from "react-icons/fa";
-import { IoCardOutline } from "react-icons/io5";
 import CheckoutForm from "@/components/shop/CheckoutForm";
-import { FaShippingFast, FaTruck } from "react-icons/fa";
-import { CiDiscount1 } from "react-icons/ci";
-import { FaGift } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import ListAddress from "@/components/checkout/ListAddress";

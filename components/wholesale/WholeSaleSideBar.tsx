@@ -2,6 +2,7 @@
 
 import { logoutUser } from "@/store/actions/auth";
 import { AppDispatch, RootState } from "@/store/store";
+import { ArrowBigLeft, PanelLeftDashed } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -43,6 +44,9 @@ const WholeSaleSidebar = () => {
     <aside className="w-64 bg-white shadow-lg border-r min-h-screen overflow-hidden">
       {/* Profile Section */}
       <div className="p-6 border-b flex flex-col items-center text-center">
+        <Link href={"/"} >
+        <ArrowBigLeft/>
+        </Link>
         <h2 className="mt-3 text-lg font-semibold text-gray-800">
           {user?.name}
         </h2>

@@ -9,6 +9,7 @@ export interface User {
   name: string;
   email: string;
   role: number; 
+  status : number ;
 }
 
 interface AuthState {

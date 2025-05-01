@@ -5,7 +5,7 @@ import { FaCcVisa, FaCcPaypal } from "react-icons/fa";
 import * as yup from "yup";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { LOCAL_PICKUP, STANDARD_DELIVERY } from "@/app/constants";
+import { ACCOUNT_STATUS, LOCAL_PICKUP, STANDARD_DELIVERY } from "@/app/constants";
 import toast from "react-hot-toast";
 import AfterPay from "./Afterpay";
 import ZipPay from "./ZipPay";
@@ -40,6 +40,10 @@ const PaymentSelector = ({
   const { loading, user } = useSelector((state: RootState) => state.auth);
   const [spiner, setSpiner] = useState(false);
   const handlePayment = async (method) => {
+    if(user?.status != ACCOUNT_STATUS.VERIFIED){
+      toast.error("Your account is not active please contact your sale manager");
+      return; 
+    }
     if (!termAndCondition) {
       toast.error("Please accept our term and conditions");
       return;
