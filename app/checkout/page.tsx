@@ -389,7 +389,7 @@ const CheckOut: React.FC = () => {
             <h2>Total</h2>
             <h2>
               $
-              {parseFloat(calculateSubTotal(data.result)) +
+              { calculateSubTotal(data.result) +
                 ((discount as any).is_shipping_free == 1
                   ? 0
                   : parseFloat(shippingPrice)) -
