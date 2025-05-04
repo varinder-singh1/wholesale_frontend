@@ -273,8 +273,9 @@ export const calculateRegularPrice = (row) => {
 
 export const calculateSubTotal = (data) => {
   const subTotal = data.reduce((sum, row) => sum + calculatePrice(row), 0);
-  return subTotal;
+  return parseFloat(subTotal.toFixed(2));
 };
+
 
 export const myCart = createAsyncThunk<any, FormData>(
   "myCart",

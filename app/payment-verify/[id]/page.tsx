@@ -17,14 +17,22 @@ const PaymentVerify = () => {
   const searchParams = useSearchParams(); // Get query params
 
   const token = searchParams.get("token") || searchParams.get("orderToken"); // Handle both token types
-console.log("token",token);
+  const status = searchParams.get("status")
+  console.log("token",token);
 const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const verifyPayment = async () => {
-      if (  !token) {
+      if (  !token || status !== "SUCCESS") {
         // console.log("token",token,orderId );
-        
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_ADDRESS}/v1/wholesale_order/failed-wholesale-order/`,
+          {
+       
+            orderId :id,
+           
+          }
+        );
         toast.error("Invalid payment details.");
         router.push("/checkout"); // Redirect if token/orderId is missing
         return;

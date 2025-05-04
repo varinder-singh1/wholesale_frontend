@@ -78,6 +78,26 @@ const PayPalComponent = ({
     }
   };
 
+  const onError = async () => {
+    const { data: responseData } = await axios.post(
+      `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/failed-wholesale-order`,
+      {
+        order: orderData,
+      }
+    );
+
+    toast.error("Failed to pay payment. please try again");
+  };
+
+  const onCancel = async () => {
+    const { data: responseData } = await axios.post(
+      `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/failed-wholesale-order`,
+      {
+        order: orderData,
+      }
+    );
+  };
+
   return (
     <PayPalScriptProvider
       options={{
@@ -93,7 +113,12 @@ const PayPalComponent = ({
         ) : (
           <div>
             <h2 className="text-lg font-semibold mb-4">Pay with PayPal</h2>
-            <PayPalButtons createOrder={createOrder} onApprove={onApprove} />
+            <PayPalButtons
+              onError={onError}
+              onCancel={onCancel}
+              createOrder={createOrder}
+              onApprove={onApprove}
+            />
           </div>
         )}
         {error && <p className="text-red-500">{error}</p>}

@@ -26,7 +26,14 @@ const dispatch = useDispatch<AppDispatch>();
     const verifyPayment = async () => {
       if (  !token || status != "approved") {
         // console.log("token",token,orderId );
-        
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_ADDRESS}/v1/wholesale_order/failed-wholesale-order/`,
+          {
+            checkout_id: token,
+            orderId :id,
+            amount :amount
+          }
+        );
         toast.error("Invalid payment details.");
         router.push("/checkout"); // Redirect if token/orderId is missing
         return;
