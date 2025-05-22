@@ -204,7 +204,7 @@ const formFields = (
                   state_name: e.name,
                 });
               }}
-              placeHolder="Select Country"
+              placeHolder="Select State"
             />
             {billingErrors.state && (
               <p className="text-red-400 ">{billingErrors.state}</p>

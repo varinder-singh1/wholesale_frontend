@@ -45,7 +45,7 @@ const ListAddress = ({
         <>
           <h1 className="text-xl my-4 font-semibold">Select Billing Address</h1>
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {setIsOpen(!isOpen),setBillingAddress({})}}
             className="ml-2 text-blue-500 text-sm"
           >
             + Add Address
