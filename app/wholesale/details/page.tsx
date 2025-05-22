@@ -3,6 +3,7 @@
 import WholeSaleSidebar from "@/components/wholesale/WholeSaleSideBar";
 import { getWholeSellerDetail } from "@/store/actions/wholesale/detail";
 import { AppDispatch, RootState } from "@/store/store";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -88,7 +89,8 @@ function AccountDetailsPage() {
               {data?.wholeseller_detail?.shop_photo && (
                 <div className="flex flex-col">
                   <span className="text-gray-600 font-medium mb-1">Shop Photo</span>
-                  <img
+                  <Image
+                  width={500} height={300}
                     src={`${process.env.NEXT_PUBLIC_S3_IMG_URL}${data?.wholeseller_detail?.shop_photo}`}
                     alt="Shop Photo"
                     className="rounded-md w-40 h-40 object-cover"
