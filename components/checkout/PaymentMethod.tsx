@@ -14,8 +14,8 @@ import { GiZipper } from "react-icons/gi";
 const paymentMethods = [
   // { id: "credit_card", name: "Credit Card", icon: <FaCcVisa /> },
   { id: "paypal", name: "PayPal / Card", icon: <FaCcPaypal /> },
-  { id: "afterpay", name: "After Pay", icon: <FaCcVisa /> },
-  { id: "zip_pay", name: "Zippay", icon: <GiZipper /> },
+  // { id: "afterpay", name: "After Pay", icon: <FaCcVisa /> },
+  // { id: "zip_pay", name: "Zippay", icon: <GiZipper /> },
 ];
 
 const PaymentSelector = ({
