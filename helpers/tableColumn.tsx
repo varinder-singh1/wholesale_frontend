@@ -398,7 +398,7 @@ export const orders_colomn = () => {
       transform: (value: any, row: any, index: number) => (
         <Link href={`/admin/orders/retail/${row.id}`} className="">
           {" "}
-          #{row.id + 108956} {row.user_detail.name}
+          #{row.id } {row.user_detail.name}
         </Link>
       ),
     },
