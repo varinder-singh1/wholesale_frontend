@@ -148,6 +148,81 @@ const WholeSaleSignUp: React.FC = () => {
       type: "text",
     },
     { name: "website", label: "Website", type: "text" },
+     {
+      name: "Business_registration_certificate",
+      label: "Upload Images",
+      type: "custom",
+      customClass: "col-span-2",
+      customRender: () => {
+        return (
+          <div className="col-span-2">
+            {/* <p>Upload the front image of the ship</p> */}
+            {
+              <UploadSingleFile
+              isRequired={true}
+                name={"business_registration_certificate"}
+                customClass="col-span-2"
+                values={values}
+                setValues={setValues}
+                errors={errors}
+                folder={"wholesalerequest"}
+                label="Upload Business registration certificate"
+              />
+            }
+          </div>
+        );
+      },
+    },
+     {
+      name: "company_address",
+      label: "Upload Images",
+      type: "custom",
+      customClass: "col-span-2",
+      customRender: () => {
+        return (
+          <div className="col-span-2">
+            {/* <p>Upload the front image of the ship</p> */}
+            {
+              <UploadSingleFile
+              isRequired={true}
+                name={"company_address"}
+                customClass="col-span-2"
+                values={values}
+                setValues={setValues}
+                errors={errors}
+                folder={"wholesalerequest"}
+                label="Upload Proof of company address (utility bill"
+              />
+            }
+          </div>
+        );
+      },
+    },
+    {
+      name: "business_card",
+      label: "Upload Images",
+      type: "custom",
+      customClass: "col-span-2",
+      customRender: () => {
+        return (
+          <div className="col-span-2">
+            {/* <p>Upload the front image of the ship</p> */}
+            {
+              <UploadSingleFile
+              isRequired={true}
+                name={"business_card"}
+                customClass="col-span-2"
+                values={values}
+                setValues={setValues}
+                errors={errors}
+                folder={"wholesalerequest"}
+                label="Upload Business card or invoice pad"
+              />
+            }
+          </div>
+        );
+      },
+    },
     {
       name: "images",
       label: "Upload Images",
@@ -156,14 +231,17 @@ const WholeSaleSignUp: React.FC = () => {
       customRender: () => {
         return (
           <div className="col-span-2">
+            {/* <p>Upload the front image of the ship</p> */}
             {
               <UploadSingleFile
+              isRequired={true}
                 name={"shop_photo"}
                 customClass="col-span-2"
                 values={values}
                 setValues={setValues}
                 errors={errors}
                 folder={"wholesalerequest"}
+                label="Upload the front image of the ship"
               />
             }
           </div>
