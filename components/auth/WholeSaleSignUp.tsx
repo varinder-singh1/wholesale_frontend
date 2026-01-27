@@ -166,7 +166,7 @@ const WholeSaleSignUp: React.FC = () => {
                 setValues={setValues}
                 errors={errors}
                 folder={"wholesalerequest"}
-                label="Upload Business registration certificate"
+                label="Upload Business registration certificate*"
               />
             }
           </div>
@@ -191,7 +191,7 @@ const WholeSaleSignUp: React.FC = () => {
                 setValues={setValues}
                 errors={errors}
                 folder={"wholesalerequest"}
-                label="Upload Proof of company address (utility bill"
+                label="Upload Proof of company address (utility bill)*"
               />
             }
           </div>
@@ -216,7 +216,7 @@ const WholeSaleSignUp: React.FC = () => {
                 setValues={setValues}
                 errors={errors}
                 folder={"wholesalerequest"}
-                label="Upload Business card or invoice pad"
+                label="Upload Business card or invoice pad*"
               />
             }
           </div>
@@ -241,7 +241,7 @@ const WholeSaleSignUp: React.FC = () => {
                 setValues={setValues}
                 errors={errors}
                 folder={"wholesalerequest"}
-                label="Upload the front image of the ship"
+                label="Upload the front image of the shop*"
               />
             }
           </div>
