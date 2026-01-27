@@ -14,6 +14,9 @@ interface UploadSingleFileProps {
   folder: string;
   customSetValue?: (name :string, val: string) => void;
   value?: string;
+  label?: string;
+  isRequired? : boolean;
+
 }
 
 const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
@@ -23,8 +26,10 @@ const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
   errors,
   name,
   folder,
-  customSetValue, // Optional prop
+  customSetValue,
   value,
+  label,
+  isRequired
 }) => {
   const updateValue = (value: string) => {
     if (customSetValue) {
@@ -64,10 +69,11 @@ const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
 
   return (
     <div className={customClass || ""}>
-      <label className="block mt-6 text-lg font-medium">Image</label>
+      <label className="block mt-6 text-lg font-medium">{label?label:  "Image"}</label>
       <div className="flex items-center gap-2">
         <input
           type="file"
+          required={!!isRequired}
           onChange={handleFileChange}
           accept=".jpg,.jpeg,.png,.webp"
           className="cursor-pointer w-full border-2 px-2 py-1 rounded focus:border-primary-300 focus:ring focus:ring-primary-200"
