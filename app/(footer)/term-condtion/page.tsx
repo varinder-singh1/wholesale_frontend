@@ -113,15 +113,21 @@ export default function TermsAndConditions() {
           </Section>
 
           <Section title="7. Warranty, Returns & Support">
-            Unless otherwise stated in writing, products are supplied with a
-            12-month manufacturer warranty.
-            <br /><br />
-            Warranty does not cover damage caused by incorrect installation,
-            misuse, modification, accident, water ingress, or unauthorised
-            repairs.
-            <br /><br />
-            Return requests must be submitted to Kayhan Audio for approval prior
-            to sending any goods back.
+            Unless otherwise stated in writing, products are supplied with a 12-month manufacturer warranty.
+            Warranty does not cover damage caused by incorrect installation, misuse, modification, accident, water ingress, or unauthorised repairs.
+            <br />
+
+          </Section>
+          <Section title="7.1 Warranty, Returns & Support">
+            Wholesale account holders may request to return eligible products within sixty (60) days from the date of purchase to receive a credit note, subject to Kayhan Audio’s approval. <br />
+
+            <br />
+            All return requests must be submitted to Kayhan Audio for approval prior to returning any goods.
+            Products must be returned in original condition, including original packaging, accessories, and documentation.
+            Returned goods must be unused, uninstalled, and in resalable condition unless otherwise agreed in writing.
+            <br />
+            Credits will be issued to the wholesale account and are not redeemable for cash.
+            Kayhan Audio reserves the right to refuse returns that do not meet these conditions.
           </Section>
 
           <Section title="8. Marketing, Branding & Listings">
