@@ -55,6 +55,7 @@ const ListCards = () => {
         category,
         search: search || searchTerm,
         limit: 20,
+        type : "wholesale"
       };
 
       if (minPrice) data.minPrice = minPrice;

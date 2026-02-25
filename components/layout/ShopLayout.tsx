@@ -41,23 +41,23 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const publicPage = ["term-condtion"]
-    const firstSegment = pathname.split("/")[1];
-    if (
-      firstSegment !== "sign-in" &&
-      firstSegment !== "signup" &&
-      firstSegment !== "login"&&
-      firstSegment !== "request-send-successfully"&&
-            firstSegment !== "forgot-password" &&
-              firstSegment !== "my-request" &&
-              !publicPage.includes(firstSegment)
-    ) {
-      if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
-        router.push("/login");
-      }
-    }
-  }, [user, loading, router, pathname]);
+  // useEffect(() => {
+  //   const publicPage = ["term-condtion"]
+  //   const firstSegment = pathname.split("/")[1];
+  //   if (
+  //     firstSegment !== "sign-in" &&
+  //     firstSegment !== "signup" &&
+  //     firstSegment !== "login"&&
+  //     firstSegment !== "request-send-successfully"&&
+  //           firstSegment !== "forgot-password" &&
+  //             firstSegment !== "my-request" &&
+  //             !publicPage.includes(firstSegment)
+  //   ) {
+  //     if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
+  //       router.push("/login");
+  //     }
+  //   }
+  // }, [user, loading, router, pathname]);
 
   useEffect(() => {
     listDepartments();
