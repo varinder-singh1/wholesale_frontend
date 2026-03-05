@@ -90,10 +90,11 @@ export const handleLogOutCart = (addToData: Record<string, any>) => {
     discount_price: addToData.discount_price,
     price: addToData.discount_price
       ? addToData.discount_price
-      : addToData.regular_price,
+      : addToData.wholesale_price,
       department_id:addToData.department_id,
       category_id:addToData.category_id,
       model_id:addToData.model_id,
+      wholesale_price : Number(addToData?.wholesale_price)
     //   +addToData.variations.reduce((sum, variation) => {
     //     return sum +  variation.options.reduce((optSum, option) => optSum + option.price, 0);
     // }, 0),

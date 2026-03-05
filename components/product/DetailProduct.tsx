@@ -162,7 +162,7 @@ const Detail = () => {
         return;
       }
     }
-
+    console.log(product , "this is product")
     const apiResponse = await dispatch(
       addToCart({
         user_id: user?.id,
@@ -172,6 +172,7 @@ const Detail = () => {
         ...addToData,
         addOns: addOns,
         variations: variation,
+        wholesale_price : (product as any)?.wholesale_price
       })
     );
 

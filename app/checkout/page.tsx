@@ -93,8 +93,8 @@ const CheckOut: React.FC = () => {
       } else {
         const cartData = localCartData();
         setData(cartData);
+        console.log(cartData , "this is cart data")
       }
-
       setApihit(true);
     } catch (error) {
       console.error("Error fetching cart data", error);
