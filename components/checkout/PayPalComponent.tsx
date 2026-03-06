@@ -1,14 +1,13 @@
 "use client";
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { PAYMENT_METHODS } from "@/app/constants";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { loadCart } from "@/store/slices/cartSlice";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
 const PayPalComponent = ({
@@ -21,22 +20,24 @@ const PayPalComponent = ({
   productData,
   selectedShipping,
 }) => {
-  const { loading, user } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+
   const [orderID, setOrderID] = useState<string | null>(null);
-  const [orderData, setOrderData] = useState<any>();
+  const [orderData, setOrderData] = useState<any>(null);
+  const orderDataRef = useRef<any>(null);
+
   const [paid, setPaid] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Create order
   const createOrder = async () => {
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/create-wholesale-order`,
         {
-          selectedShipping: selectedShipping,
-          user: user,
+          selectedShipping,
+          user,
           shippingAddress,
           billingAddress,
           productData,
@@ -45,57 +46,98 @@ const PayPalComponent = ({
           deviceDetails,
         }
       );
+
+      console.log("create-wholesale-order response:", data);
+
+      if (!data?.orderID) {
+        throw new Error("orderID not found in API response");
+      }
+
+      if (!data?.order) {
+        throw new Error("order object not found in API response");
+      }
+
       setOrderID(data.orderID);
       setOrderData(data.order);
+      orderDataRef.current = data.order;
+
       return data.orderID;
-    } catch (err) {
+    } catch (err: any) {
       setError("Failed to create order.");
-      console.error(err);
+      console.error("createOrder error:", err?.response?.data || err.message || err);
+      throw err;
     }
   };
 
-  // Capture payment
   const onApprove = async (data: any) => {
     try {
+      const currentOrder = orderDataRef.current;
+
+      if (!data?.orderID) {
+        throw new Error("PayPal orderID missing in onApprove");
+      }
+
+      if (!currentOrder) {
+        throw new Error("Local order data missing before capture");
+      }
+
       const { data: responseData } = await axios.post(
         `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/capture-wholesale-order`,
         {
           orderID: data.orderID,
-          order: orderData,
+          order: currentOrder,
         }
       );
 
+      console.log("capture-wholesale-order response:", responseData);
+
       if (responseData.status === "COMPLETED") {
         dispatch(loadCart(0));
-        router.push(`/payment-successfull/${orderData.id}`);
         localStorage.setItem("addToCart", "[]");
         toast.success("Order Placed Successfully!");
-        // setPaid(true);
+        setPaid(true);
+        router.push(`/payment-successfull/${currentOrder.id}`);
+      } else {
+        throw new Error("Payment not completed");
       }
-    } catch (err) {
+    } catch (err: any) {
       setError("Payment failed.");
-      console.error(err);
+      console.error("onApprove error:", err?.response?.data || err.message || err);
     }
   };
 
-  const onError = async () => {
-    const { data: responseData } = await axios.post(
-      `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/failed-wholesale-order`,
-      {
-        order: orderData,
-      }
-    );
+  const onError = async (err: any) => {
+    console.error("PayPal onError:", err);
 
-    toast.error("Failed to pay payment. please try again");
+    try {
+      if (orderDataRef.current) {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/failed-wholesale-order`,
+          {
+            order: orderDataRef.current,
+          }
+        );
+      }
+    } catch (error) {
+      console.error("failed-wholesale-order error:", error);
+    }
+
+    toast.error("Failed to process payment. Please try again");
   };
 
   const onCancel = async () => {
-    const { data: responseData } = await axios.post(
-      `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/failed-wholesale-order`,
-      {
-        order: orderData,
+    try {
+      if (orderDataRef.current) {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_ADDRESS}/v1/paypal/failed-wholesale-order`,
+          {
+            order: orderDataRef.current,
+          }
+        );
       }
-    );
+    } catch (error) {
+      console.error("cancel failed-wholesale-order error:", error);
+    }
   };
 
   return (
@@ -114,6 +156,8 @@ const PayPalComponent = ({
           <div>
             <h2 className="text-lg font-semibold mb-4">Pay with PayPal</h2>
             <PayPalButtons
+              style={{ layout: "vertical" }}
+              forceReRender={["AUD"]}
               onError={onError}
               onCancel={onCancel}
               createOrder={createOrder}
