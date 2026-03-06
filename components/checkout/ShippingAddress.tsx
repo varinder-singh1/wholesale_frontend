@@ -179,7 +179,17 @@ const getformFields = (
       labelClass:
         "  text-gray-700 text-sm transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-900 peer-focus:top-1 peer-focus:text-sm peer-focus:text-green-500",
     },
-
+ {
+      name: "street_address",
+      label: "Street Address",
+      type: "text",
+      fieldClass:
+      "peer w-full rounded border border-gray-400 p-2 focus:outline-none focus:border-green-500",
+    labelClass:
+      "text-gray-700 ",
+      placeholder : "Enter street address"
+    },
+    
     {
       name: "postcode",
       label: "Zip code",
