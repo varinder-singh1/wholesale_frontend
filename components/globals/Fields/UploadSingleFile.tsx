@@ -151,7 +151,7 @@ const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
         )}
       </div>
 
-      {errors[name] && <p className="text-red-500 mt-1">{errors[name]}</p>}
+      {/* {errors[name] && <p className="text-red-500 mt-1">{errors[name]}</p>} */}
     </div>
   );
 };
