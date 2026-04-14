@@ -1,5 +1,5 @@
 "use client";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { SignInData, wholeSalesignUpAction } from "@/store/actions/auth";
@@ -21,7 +21,7 @@ const WholeSaleSignUp: React.FC = () => {
   const router = useRouter();
 
   const [values, setValues] = useState<any>({});
-    const [deviceDetails, setDeviceDetails] = useState<any>([]);
+  const [deviceDetails, setDeviceDetails] = useState<any>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedCountryId, setSelectedCountryId] = useState<number | null>(
     null
@@ -45,7 +45,7 @@ const WholeSaleSignUp: React.FC = () => {
 
         setDeviceDetails({ ip, type: deviceType });
         console.log('📱 Device Details:', { ip, deviceType });
-        setValues({...values , device_detail :{ ip, deviceType } })
+        setValues({ ...values, device_detail: { ip, deviceType } })
       } catch (error) {
         console.error('Error fetching IP:', error);
       }
@@ -110,7 +110,7 @@ const WholeSaleSignUp: React.FC = () => {
               }}
               placeHolder="Select State"
             />
-                      {errors.state && <p className="text-red-400" >{errors.state}</p>}
+            {errors.state && <p className="text-red-400" >{errors.state}</p>}
           </div>
         ) : null,
     },
@@ -148,7 +148,7 @@ const WholeSaleSignUp: React.FC = () => {
       type: "text",
     },
     { name: "website", label: "Website", type: "text" },
-     {
+    {
       name: "Business_registration_certificate",
       label: "Upload Images",
       type: "custom",
@@ -159,7 +159,7 @@ const WholeSaleSignUp: React.FC = () => {
             {/* <p>Upload the front image of the ship</p> */}
             {
               <UploadSingleFile
-              isRequired={true}
+                isRequired={true}
                 name={"business_registration_certificate"}
                 customClass="col-span-2"
                 values={values}
@@ -173,7 +173,7 @@ const WholeSaleSignUp: React.FC = () => {
         );
       },
     },
-     {
+    {
       name: "company_address",
       label: "Upload Images",
       type: "custom",
@@ -184,7 +184,7 @@ const WholeSaleSignUp: React.FC = () => {
             {/* <p>Upload the front image of the ship</p> */}
             {
               <UploadSingleFile
-              isRequired={true}
+                isRequired={true}
                 name={"company_address"}
                 customClass="col-span-2"
                 values={values}
@@ -209,7 +209,7 @@ const WholeSaleSignUp: React.FC = () => {
             {/* <p>Upload the front image of the ship</p> */}
             {
               <UploadSingleFile
-              isRequired={true}
+                isRequired={true}
                 name={"business_card"}
                 customClass="col-span-2"
                 values={values}
@@ -234,7 +234,7 @@ const WholeSaleSignUp: React.FC = () => {
             {/* <p>Upload the front image of the ship</p> */}
             {
               <UploadSingleFile
-              isRequired={true}
+                isRequired={true}
                 name={"shop_photo"}
                 customClass="col-span-2"
                 values={values}
@@ -248,17 +248,17 @@ const WholeSaleSignUp: React.FC = () => {
         );
       },
     },
-//     { name: "term and condtions", label: "    ", customClass:"col-span-2", type: "checkbox",options: [
-//       { value: "", label: "I have read and agree to the website terms & conditions" },
-//       ], },
-{
-  name: "state",
-  label: "",
-  type: "custom",
-  customClass: "col-span-2",
-  customRender: () =>
-    <TermCondation />
-},
+    //     { name: "term and condtions", label: "    ", customClass:"col-span-2", type: "checkbox",options: [
+    //       { value: "", label: "I have read and agree to the website terms & conditions" },
+    //       ], },
+    {
+      name: "state",
+      label: "",
+      type: "custom",
+      customClass: "col-span-2",
+      customRender: () =>
+        <TermCondation />
+    },
   ];
 
   const handleSubmit = async (
@@ -267,10 +267,20 @@ const WholeSaleSignUp: React.FC = () => {
     mode: string
   ) => {
     e.preventDefault();
+
+    const validationErrors = validateForm(values);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // ❌ stop API call
+    }
+
     try {
       const res = await dispatch(wholeSalesignUpAction(values)).unwrap();
+
       if (res.success) {
         setValues({});
+        setErrors({});
         router.push("request-send-successfully");
       }
     } catch (error) {
@@ -297,7 +307,7 @@ const WholeSaleSignUp: React.FC = () => {
           submitClass="col-span-2 flex justify-center"
           submitBtnClass='w-1/2 mx-auto bg-black text-white rounded-md px-4 py-2 '
         />
-      
+
         <div className="mt-4 text-center">
           <p className="text-sm">
             Already have an account?{" "}
@@ -315,3 +325,44 @@ const WholeSaleSignUp: React.FC = () => {
 };
 
 export default WholeSaleSignUp;
+
+const validateForm = (values: any) => {
+  const newErrors: Record<string, string> = {};
+
+  if (!values.company_name) newErrors.company_name = "Company name is required";
+  if (!values.contact_name) newErrors.contact_name = "Contact name is required";
+  if (!values.abn_acn) newErrors.abn_acn = "ABN/ACN is required";
+
+  if (!values.country) newErrors.country = "Country is required";
+  if (!values.state) newErrors.state = "State is required";
+
+  if (!values.city) newErrors.city = "City is required";
+  if (!values.postcode) newErrors.postcode = "Postcode is required";
+
+  if (!values.phone) {
+    newErrors.phone = "Phone is required";
+  } else if (!/^[0-9]{7,15}$/.test(values.phone)) {
+    newErrors.phone = "Invalid phone number";
+  }
+
+  if (!values.account_payable_email) {
+    newErrors.account_payable_email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.account_payable_email)) {
+    newErrors.account_payable_email = "Invalid email";
+  }
+
+  // ✅ File validations
+  if (!values.business_registration_certificate)
+    newErrors.business_registration_certificate = "Business certificate is required";
+
+  if (!values.company_address)
+    newErrors.company_address = "Company address proof is required";
+
+  if (!values.business_card)
+    newErrors.business_card = "Business card is required";
+
+  if (!values.shop_photo)
+    newErrors.shop_photo = "Shop photo is required";
+
+  return newErrors;
+};
