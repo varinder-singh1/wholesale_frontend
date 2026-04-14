@@ -352,17 +352,6 @@ const validateForm = (values: any) => {
   }
 
   // ✅ File validations
-  if (!values.business_registration_certificate)
-    newErrors.business_registration_certificate = "Business certificate is required";
-
-  if (!values.company_address)
-    newErrors.company_address = "Company address proof is required";
-
-  if (!values.business_card)
-    newErrors.business_card = "Business card is required";
-
-  if (!values.shop_photo)
-    newErrors.shop_photo = "Shop photo is required";
-
+ 
   return newErrors;
 };
