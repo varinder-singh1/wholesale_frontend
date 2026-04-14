@@ -106,7 +106,7 @@ const UploadSingleFile: React.FC<UploadSingleFileProps> = ({
       <div className="flex flex-col gap-3">
         <input
           type="file"
-          required={!!isRequired}
+          // required={!!isRequired}
           onChange={handleFileChange}
           className="cursor-pointer w-full border-2 px-2 py-2 rounded focus:border-primary-300 focus:ring focus:ring-primary-200"
         />
