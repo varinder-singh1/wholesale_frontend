@@ -234,7 +234,7 @@ const WholeSaleSignUp: React.FC = () => {
             {/* <p>Upload the front image of the ship</p> */}
             {
               <UploadSingleFile
-                isRequired={true}
+                // isRequired={true}
                 name={"shop_photo"}
                 customClass="col-span-2"
                 values={values}
