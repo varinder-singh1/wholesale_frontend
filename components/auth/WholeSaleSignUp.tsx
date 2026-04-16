@@ -113,7 +113,7 @@ const stateOptions = values?.country?.isoCode
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      showPopup("Please fix these errors", Object.values(validationErrors));
+      showPopup("Please fill these fields", Object.values(validationErrors));
       return;
     }
 
