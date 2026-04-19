@@ -42,22 +42,35 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const publicPage = ["term-condtion"]
-    const firstSegment = pathname.split("/")[1];
-    if (
-      firstSegment !== "sign-in" &&
-      firstSegment !== "signup" &&
-      firstSegment !== "login"&&
-      firstSegment !== "request-send-successfully"&&
-            firstSegment !== "forgot-password" &&
-              firstSegment !== "my-request" &&
-              !publicPage.includes(firstSegment)
-    ) {
-      if (!loading && (!user || user?.role !== USER_ROLE.wholesale)) {
-        router.push("/login");
-      }
+  if (loading) return; // ⛔ wait until auth is ready
+
+  const publicPages = [
+    "sign-in",
+    "signup",
+    "login",
+    "request-send-successfully",
+    "forgot-password",
+    "my-request",
+    "term-condtion",
+  ];
+
+  const firstSegment = pathname.split("/")[1] || "";
+
+  const isPublicPage = publicPages.includes(firstSegment);
+
+  if (!isPublicPage) {
+    if (!user) {
+      router.push("/login");
+      return;
     }
-  }, [user, loading, router, pathname]);
+
+    // ⚠️ only check role if required
+    if (user.role !== USER_ROLE.wholesale) {
+      router.push("/login");
+      return;
+    }
+  }
+}, [user, loading, router, pathname]);
 
   useEffect(() => {
     listDepartments();
