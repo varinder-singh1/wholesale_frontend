@@ -19,7 +19,7 @@ const ShopFooter: React.FC = () => {
     { name: " Customer Services", link: "/customer-services" },
     // { name: "Affiliate Sign Up", link: "#" },
     // { name: "Affiliate Login", link: "#" },
-    { name: "Become Our Authorised Wholesaler", link: "https://wholesale-kayhanaudio.com.au/" },
+    // { name: "Become Our Authorised Wholesaler", link: "https://wholesale-kayhanaudio.com.au/" },
   ];
 
   const policyLinks: LinkItem[] = [
